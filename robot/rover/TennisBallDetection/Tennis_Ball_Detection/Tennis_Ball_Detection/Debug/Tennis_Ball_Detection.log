@@ -1,0 +1,18 @@
+﻿Build started 25/03/2019 6:32:14 PM.
+     1>Project "C:\Users\Rouzbeh\Documents\Visual Studio 2013\Projects\Tennis_Ball_Detection\Tennis_Ball_Detection\Tennis_Ball_Detection.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ID:\OpenCV\3.0.0\opencv\build\include /AID:\OpenCV\3.0.0\opencv\build\x64\vc12\lib /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PrintedObj.cpp
+         PrintedObj.cpp
+     1>c:\users\rouzbeh\documents\visual studio 2013\projects\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(132): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\rouzbeh\documents\visual studio 2013\projects\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(148): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\rouzbeh\documents\visual studio 2013\projects\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(162): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\rouzbeh\documents\visual studio 2013\projects\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(204): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\rouzbeh\documents\visual studio 2013\projects\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(119): warning C4715: 'PrintedObj::FindContours' : not all control paths return a value
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Rouzbeh\Documents\Visual Studio 2013\Projects\Tennis_Ball_Detection\Debug\Tennis_Ball_Detection.exe" /INCREMENTAL /NOLOGO /LIBPATH:D:\OpenCV\3.0.0\opencv\build\x64\vc12\lib opencv_world300d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Rouzbeh\Documents\Visual Studio 2013\Projects\Tennis_Ball_Detection\Debug\Tennis_Ball_Detection.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Rouzbeh\Documents\Visual Studio 2013\Projects\Tennis_Ball_Detection\Debug\Tennis_Ball_Detection.lib" /MACHINE:X86 Debug\PrintedObj.obj
+     1>opencv_world300d.lib(opencv_world300d.dll) : fatal error LNK1112: module machine type 'x64' conflicts with target machine type 'X86'
+     1>Done Building Project "C:\Users\Rouzbeh\Documents\Visual Studio 2013\Projects\Tennis_Ball_Detection\Tennis_Ball_Detection\Tennis_Ball_Detection.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.82

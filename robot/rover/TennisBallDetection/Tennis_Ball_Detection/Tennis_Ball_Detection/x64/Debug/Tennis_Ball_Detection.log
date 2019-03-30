@@ -1,0 +1,22 @@
+﻿Build started 2019-03-29 4:02:28 PM.
+     1>Project "E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\Tennis_Ball_Detection\Tennis_Ball_Detection.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /IE:\Robotic\OpenCV\opencv\build\include /AIE:\Robotic\OpenCV\opencv\build\x64\vc12\lib /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt PrintedObj.cpp Program.cpp
+         Program.cpp
+     1>Program.cpp(105): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>Program.cpp(106): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+         PrintedObj.cpp
+     1>PrintedObj.cpp(145): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>PrintedObj.cpp(180): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>PrintedObj.cpp(232): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+         Generating Code...
+     1>e:\dropbox\dropbox\concordia\space-robotic\tennis ball detection\tennis_ball_detection\tennis_ball_detection\printedobj.cpp(132): warning C4715: 'PrintedObj::FindContours' : not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\x64\Debug\Tennis_Ball_Detection.exe" /INCREMENTAL /NOLOGO /LIBPATH:E:\Robotic\OpenCV\opencv\build\x64\vc12\lib opencv_world300d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\x64\Debug\Tennis_Ball_Detection.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\x64\Debug\Tennis_Ball_Detection.lib" /MACHINE:X64 x64\Debug\PrintedObj.obj
+         x64\Debug\Program.obj
+         Tennis_Ball_Detection.vcxproj -> E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\x64\Debug\Tennis_Ball_Detection.exe
+     1>Done Building Project "E:\Dropbox\Dropbox\Concordia\Space-Robotic\Tennis Ball Detection\Tennis_Ball_Detection\Tennis_Ball_Detection\Tennis_Ball_Detection.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.15
