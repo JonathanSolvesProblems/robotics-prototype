@@ -17,3 +17,6 @@
 **/rospackages/build
 **/rospackages/devel
 **/odroid_rx.txt
+**/x64
+**/*.opensdf
+**/*.sdf
