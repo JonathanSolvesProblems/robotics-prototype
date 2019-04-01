@@ -1,8 +1,8 @@
 import math
 
-BS = [0 , 0]
+BS = {'lat':0 , 'lon':0}
 #place holder for Base Station Antenna location [Latitude , Longitude]
-Rover = [0 , 0]
+Rover = {'lat':0 , 'lon':0}
 #place holder for Rover location [Latitude , Longitude]
 print("Enter Base Station latitude:")
 BS[0] = float(input())
@@ -22,12 +22,16 @@ print("Enter Starting Direction:")
 SD = float(input())
 
 
-BS = [(math.pi/180)*x for x in BS]
-Rover = [(math.pi/180)*x for x in Rover]
+for k in BS:
+	BS[k] = BS[k] * (math.pi/180)
+
+for k in Rover:
+	Rover[k] = Rover[k] * (math.pi/180)
 #change coordinates into radians
 
-X = math.cos(Rover[0]) * math.sin(Rover[1]-BS[1])
-Y = math.cos(BS[0]) * math.sin(Rover[0]) - math.sin(BS[0]) * math.cos(Rover[0]) * math.cos(Rover[1] - BS[1])
+X = math.cos(Rover['lat']) * math.sin(Rover['lon']-BS['lon'])
+Y = math.cos(BS['lat']) * math.sin(Rover['lat']) - math.sin(BS['lat']) * 
+math.cos(Rover['lat']) * math.cos(Rover['lon'] - BS['lon'])
 #X and Y are transitional variables in the calculations
 
 RD = math.atan2(X,Y)
