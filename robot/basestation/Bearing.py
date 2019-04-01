@@ -5,17 +5,17 @@ BS = {'lat':0 , 'lon':0}
 Rover = {'lat':0 , 'lon':0}
 #place holder for Rover location [Latitude , Longitude]
 print("Enter Base Station latitude:")
-BS[0] = float(input())
+BS['lat'] = float(input())
 
 print("Enter Base Station longitude:")
-BS[1] = float(input())
+BS['lon'] = float(input())
 
 print("Enter Rover latitude:")
-Rover[0] = float(input())
+Rover['lat'] = float(input())
 
 
 print("Enter Rover longitude:")
-Rover[1] = float(input())
+Rover['lon'] = float(input())
 
 
 print("Enter Starting Direction:")
