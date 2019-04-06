@@ -1,0 +1,553 @@
+<robot
+  name="astro">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0049684 0.29954 -0.0027089"
+        rpy="0 0 0" />
+      <mass
+        value="2.5841" />
+      <inertia
+        ixx="0.085247"
+        ixy="-0.00022295"
+        ixz="0.0021721"
+        iyy="0.11902"
+        iyz="-0.00020774"
+        izz="0.033881" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left_link">
+    <inertial>
+      <origin
+        xyz="0.016805 2.5964E-05 -0.056637"
+        rpy="0 0 0" />
+      <mass
+        value="1.3521" />
+      <inertia
+        ixx="0.026603"
+        ixy="-4.8774E-07"
+        ixz="0.00099133"
+        iyy="0.0039284"
+        iyz="1.8028E-06"
+        izz="0.023236" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_joint"
+    type="revolute">
+    <origin
+      xyz="-0.19865 -0.1651 0.3005"
+      rpy="1.2636E-09 -9.8255E-13 3.1416" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.69813"
+      upper="0.69813"
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="left_f_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.5831E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5973E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_f_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_f_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_f_joint"
+    type="fixed">
+    <origin
+      xyz="0.16523 0.1651 -0.1505"
+      rpy="3.1416 -9.8255E-13 3.1416" />
+    <parent
+      link="left_link" />
+    <child
+      link="left_f_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="left_m_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.585E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5973E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_m_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/left_m_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_m_joint"
+    type="fixed">
+    <origin
+      xyz="0.16523 -0.1651 -0.1505"
+      rpy="1.5708 -9.8255E-13 3.1416" />
+    <parent
+      link="left_link" />
+    <child
+      link="left_m_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="right_link">
+    <inertial>
+      <origin
+        xyz="0.015941 1.983E-05 -0.054516"
+        rpy="0 0 0" />
+      <mass
+        value="1.4176" />
+      <inertia
+        ixx="0.028615"
+        ixy="1.293E-05"
+        ixz="0.0010427"
+        iyy="0.0040947"
+        iyz="2.1804E-06"
+        izz="0.025148" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_joint"
+    type="revolute">
+    <origin
+      xyz="0.19865 -0.1651 0.3005"
+      rpy="1.2636E-09 -0.00036232 1.4953E-16" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_link" />
+    <axis
+      xyz="1 0 -0.00036232" />
+    <limit
+      lower="-0.69813"
+      upper="0.69813"
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="right_f_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.5831E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5973E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_f_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_f_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_f_joint"
+    type="fixed">
+    <origin
+      xyz="0.16517 -0.1651 -0.15055"
+      rpy="1.5708 -0.00036232 3.1416" />
+    <parent
+      link="right_link" />
+    <child
+      link="right_f_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="right_m_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.5831E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5972E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_m_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/right_m_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_m_joint"
+    type="fixed">
+    <origin
+      xyz="0.16517 0.1651 -0.15055"
+      rpy="1.5708 -0.00036232 3.1416" />
+    <parent
+      link="right_link" />
+    <child
+      link="right_m_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="back_link">
+    <inertial>
+      <origin
+        xyz="-0.0049684 0.29954 -0.0027089"
+        rpy="0 0 0" />
+      <mass
+        value="2.5841" />
+      <inertia
+        ixx="0.085247"
+        ixy="-0.00022295"
+        ixz="0.0021721"
+        iyy="0.11902"
+        iyz="-0.00020774"
+        izz="0.033881" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_joint"
+    type="revolute">
+    <origin
+      xyz="0 0.3447 0.3005"
+      rpy="-6.123E-17 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="back_link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.69813"
+      upper="0.69813"
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="back_l_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.5832E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5972E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_l_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_l_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_l_joint"
+    type="fixed">
+    <origin
+      xyz="-0.36071 0 -0.1505"
+      rpy="1.5708 0 0" />
+    <parent
+      link="back_link" />
+    <child
+      link="back_l_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+  <link
+    name="back_r_link">
+    <inertial>
+      <origin
+        xyz="0.014268 1.3036E-06 5.5831E-07"
+        rpy="0 0 0" />
+      <mass
+        value="13.647" />
+      <inertia
+        ixx="0.003429"
+        ixy="-1.0912E-06"
+        ixz="1.5973E-07"
+        iyy="0.0056935"
+        iyz="-1.1037E-09"
+        izz="0.0056937" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_r_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://astro/meshes/back_r_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_r_joint"
+    type="fixed">
+    <origin
+      xyz="0.36071 0 -0.15049"
+      rpy="1.5708 7.1054E-13 3.1416" />
+    <parent
+      link="back_link" />
+    <child
+      link="back_r_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      effort="1000"
+      velocity="0.75" />
+  </joint>
+</robot>
