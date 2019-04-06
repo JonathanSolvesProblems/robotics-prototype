@@ -1,3 +1,4 @@
+<!-- first make sure source devel/setup.bash before running this -->
 <launch>
   <include
     file="$(find gazebo_ros)/launch/empty_world.launch" />
