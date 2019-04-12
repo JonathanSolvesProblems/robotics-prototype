@@ -1,64 +1,63 @@
+import serial
 import math
 
+ser = serial.Serial('COM3', 115200 , timeout = 1)
+
 BS = {'lat':0 , 'lon':0}
-#place holder for Base Station Antenna location [Latitude , Longitude]
 Rover = {'lat':0 , 'lon':0}
-#place holder for Rover location [Latitude , Longitude]
-print("Enter Base Station latitude:")
-BS['lat'] = float(input())
 
-print("Enter Base Station longitude:")
-BS['lon'] = float(input())
+temp1 = float(input("Enter Base Station Latitude :"))
+temp2 = float(input("Enter Base Station Longitude :"))
+BS_ant_dir = float(input("Enter Base Station Antenna Starting Direction :"))
 
-print("Enter Rover latitude:")
-Rover['lat'] = float(input())
+R = 6371000
+while True:
+    GPS = ser.readline().decode('ascii')
 
-
-print("Enter Rover longitude:")
-Rover['lon'] = float(input())
-
-
-print("Enter Starting Direction:")
-SD = float(input())
+    if len(GPS) > 5:
+        GPS = GPS.split()
+        Rover_lat_deg = float(GPS[0])
+        Rover_lon_deg = float(GPS[1])
 
 
-for k in BS:
-	BS[k] = BS[k] * (math.pi/180)
 
-for k in Rover:
-	Rover[k] = Rover[k] * (math.pi/180)
-#change coordinates into radians
+        BS['lat'] = temp1
+        BS['lon'] = temp2
 
-X = math.cos(Rover['lat']) * math.sin(Rover['lon']-BS['lon'])
-Y = math.cos(BS['lat']) * math.sin(Rover['lat']) - math.sin(BS['lat']) * 
-math.cos(Rover['lat']) * math.cos(Rover['lon'] - BS['lon'])
-#X and Y are transitional variables in the calculations
+        Rover['lat'] = Rover_lat_deg * (math.pi / 180)
+        Rover['lon'] = Rover_lon_deg * (math.pi / 180)
+        BS['lat'] = BS['lat'] * (math.pi / 180)
+        BS['lon'] = BS['lon'] * (math.pi / 180)
 
-RD = math.atan2(X,Y)
-#Direction calculation from Base Station Antenna to Rover
+        delta_lat = Rover['lat'] - BS['lat']
+        delta_lon = Rover['lon'] - BS['lon']
 
+        X = math.cos(Rover['lat']) * math.sin(delta_lon)
+        Y = math.cos(BS['lat']) * math.sin(Rover['lat']) - math.sin(BS['lat']) * math.cos(Rover['lat']) * math.cos(delta_lon)
 
-RD = RD * (180/math.pi)
-#change back into degrees
+        Real_dir = math.atan2(X, Y)
 
-if RD < 0:
-    RD = RD + 360
-#change the result range from [-180,180] to [0,360]
+        Real_dir = Real_dir * (180 / math.pi)
 
-Rotator = RD - SD + 180
-#calculate the rotator's own direction
-#it's a function of its starting direction, and the real direction to rover
+        if Real_dir < 0:
+            Real_dir = Real_dir + 360
 
-if Rotator < 0:
-    Rotator = Rotator + 360
-elif Rotator > 360:
-    Rotator = Rotator - 360
-#make corrections to keep the result output in the [0,360] range
+        Rotator = Real_dir - BS_ant_dir + 180
 
-print('Starting Direction : {}'.format(SD))
-print('Real Direction : {}'.format(RD))
-print('Rotator Direction : {}'.format(Rotator))
-#show all results 
+        if Rotator < 0:
+            Rotator = Rotator + 360
+        elif Rotator > 360:
+            Rotator = Rotator - 360
+
+        A = ((math.sin(delta_lat / 2)) ** 2) + math.cos(Rover['lat']) * math.cos(BS['lat']) * ((math.sin(delta_lon / 2)) ** 2)
+        C = 2 * math.atan2(math.sqrt(A), math.sqrt(1 - A))
+        Distance = R * C
 
 
+        print('Rover Location : {},{}'.format(Rover_lat_deg,Rover_lon_deg))
+        print('Starting Direction : {}'.format(BS_ant_dir))
+        print('Real Direction : {}'.format(round(Real_dir)))
+        print('Needed Rotator Direction : {}'.format(round(Rotator)))
+        print('Distance is {} meters'.format(round(Distance)))
+        print('\n')
 
