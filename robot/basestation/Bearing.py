@@ -1,7 +1,24 @@
-import serial
+import serial.tools.list_ports
+import sys
 import math
 
-ser = serial.Serial('COM3', 115200 , timeout = 1)
+if sys.platform.startswith('linux'):
+    ports = list(serial.tools.list_ports.comports())
+    first_port = ports[0].name
+    ser = serial.Serial('/dev/' + first_port, 115200 , timeout = 1)
+
+elif sys.platform.startswith('win'):
+
+    ports = serial.tools.list_ports.comports()
+    connected = []
+    for element in ports:
+        connected.append(element.device)
+
+    if connected[0] == 'COM1':
+        ser = serial.Serial(connected[1] , 115200 , timeout = 1)
+    else:
+        ser = serial.Serial(connected[0] , 115200 , timeout = 1)
+
 
 BS = {'lat':0 , 'lon':0}
 Rover = {'lat':0 , 'lon':0}
@@ -14,10 +31,10 @@ R = 6371000
 while True:
     GPS = ser.readline().decode('ascii')
 
-    if len(GPS) > 5:
+    if GPS[0:3] == 'GPS':
         GPS = GPS.split()
-        Rover_lat_deg = float(GPS[0])
-        Rover_lon_deg = float(GPS[1])
+        Rover_lat_deg = float(GPS[1])
+        Rover_lon_deg = float(GPS[2])
 
 
 
@@ -60,4 +77,3 @@ while True:
         print('Needed Rotator Direction : {}'.format(round(Rotator)))
         print('Distance is {} meters'.format(round(Distance)))
         print('\n')
-
