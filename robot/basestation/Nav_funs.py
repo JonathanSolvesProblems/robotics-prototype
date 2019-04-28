@@ -46,7 +46,24 @@ def Distance (p1_lat,p1_lon,p2_lat,p2_lon):
 	C = 2 * math.atan2(math.sqrt(A) , math.sqrt(1 - A))
 	return R * C
 
-	
+def Turning (Dest_dir , heading):
+	'''
+	This function is to determine the needed adjustment in direction to go to destination
+	Input is the direction to destination and rover heading in degrees
+	Output is the needed adjustment in degrees
+	if the output is positive number , it means the rover needs to turn right
+	if the output is negative number , it means the rover needs to turn left
+	'''
+	shift = Dest_dir - heading
+	if shift > 0 and shift < 180:
+		return shift
+	elif shift > 180 and shift < 360:
+		return shift - 360
+	elif shift < 0 and shift > -180:
+		return shift
+	elif shift < -180 and shift > -360:
+		return shift + 360
+
 #BS = {'lat':0 , 'lon':0}
 #Rover = {'lat':0 , 'lon':0}
 
