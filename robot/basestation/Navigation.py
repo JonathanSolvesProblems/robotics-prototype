@@ -1,6 +1,6 @@
 import serial.tools.list_ports
 import sys
-from Nav_funs import Direction , Distance
+from Nav_funs import Direction , Distance , Turning
 
 if sys.platform.startswith('linux'):
     ports = list(serial.tools.list_ports.comports())
@@ -20,7 +20,7 @@ elif sys.platform.startswith('win'):
         ser = serial.Serial(connected[0] , 115200 , timeout = 1)
 
 Destination = {'lat':0 , 'lon':0}
-Rover = {'lat':0 , 'lon':0}
+Rover = {'lat':0 , 'lon':0 , 'heading':0}
 
 Destination['lat'] = float(input('Enter the destination latitude :'))
 Destination['lon'] = float(input('Enter the destination longitude :'))
@@ -31,14 +31,18 @@ while True:
     if Data.find('GPS') != -1:
         if Data.find('OK') != -1:
             temp = Data.split()
-            Rover['lat'] = temp[1]
-            Rover['lon'] = temp[2]
-            print('Rover is at : {},{}'.format(Rover['lat'],Rover['lon']))
+            Rover['lat'] = float(temp[1])
+            Rover['lon'] = float(temp[2])
+            # print('Rover is at : {},{}'.format(Rover['lat'],Rover['lon']))
         elif Data.find('N/A') != -1:
             print('Rover GPS data is not available yet')
     elif Data.find('Heading') != -1:
-        print('Rover Heading is : {} degrees'.format(Data.split()[1]))
-        print('\n')
+        Rover['heading'] = float(Data.split()[1])
+        # print('Rover Heading is : {} degrees'.format(Data.split()[1]))
+        # print('\n')
 
+    Rov_to_des_distance = Distance(Rover['lat'],Rover['lon'],Destination['lat'],Destination['lon'])
+    Rov_to_des_direction = Direction(Rover['lat'],Rover['lon'],Destination['lat'],Destination['lon'])
 
+    Direction_adjust = Turning(Rov_to_des_direction , Rover['heading'])
 
