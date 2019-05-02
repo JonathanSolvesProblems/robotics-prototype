@@ -52,11 +52,12 @@ void displayInfo()                 // The function that prints the info
     Serial.print(gps.location.lat(), 6);   // print the latitude with 6 digits after the point
     Serial.print(" ");           // space
     Serial.print(gps.location.lng(), 6);   // print the longitude with 6 digits after the point
-    Serial.print("\n");             // new line
+    Serial.print("--");             // new line
   }
   else
   {
-    Serial.println(F("GPS-N/A"));
+    Serial.print(F("GPS-N/A"));
+    Serial.print("--");
   }
   
 }
