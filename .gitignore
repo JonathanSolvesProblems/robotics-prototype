@@ -3,6 +3,7 @@
 **/*pycache*
 **/*__pycache__
 **/*.pyc
+**/*.swp
 **/.pytest*
 **/*.egg-info
 **/*sh.exe.stackdump

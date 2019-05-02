@@ -28,6 +28,10 @@
     <script src="../static/js/app.js"></script>
     <script src="../static/js/rover.js"></script>
 
+    <!-- Map -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.css">
 </head>
 
 <body>
@@ -62,7 +66,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="container-header">GPS Map</h5>
-                    <img src="../static/images/gps_map.jpg" class="mx-auto d-block" id="arm-position"/>
+                    <div id="map" style="width:100%; height: 100%;"></div>
                 </div>
                 <div class="col-md-6">
                     <h5 class="container-header">Camera</h5>
@@ -332,4 +336,15 @@
 
 </body>
 
+    <script>
+        MAP = new maptalks.Map('map', {
+        center: [0,20],
+        zoom: 2.5,
+        baseLayer: new maptalks.TileLayer('base', {
+            urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            subdomains: ['a','b','c','d'],
+            attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy;'
+          })
+        });
+    </script>
 </html>

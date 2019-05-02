@@ -33,7 +33,7 @@ def fetch_ros_master_uri():
 
 def fetch_ros_master_ip():
     """Fetch only the hostname (host IP) portion of the parse URI."""
-    return fetch_ros_master_uri().hostname
+    return "127.0.0.1"
 
 
 def run_shell(cmd, arg=""):
