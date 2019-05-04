@@ -347,31 +347,31 @@ def rover_drive():
 
     if not feedback:
         feedback = "Timeout limit exceeded, no data received"
-	else:
-		print("feedback:", feedback)
-		lat = 45.520495; long = -73.392162;
-		data = feedback.split("\n") # last message will be an empty string (or have "\r")
-		data = reversed(data)
-		i = 1 #skip the empty string
-		while True:
-			if data[i].find("GPS") != -1: # check if GPS is in the message
-				if latestGpsMsg is None:
-					latestGpsMsg = i
-				if data[i].find("OK") is not -1: # there is GPS data
-					print("calling NavigationClient")
-					output, error = run_shell("python NavigationClient.py",lat,long,data[i])
-					output = str(output, "utf-8")
-					print("output: " + output)
-					break
-			if i>=5:
-				if latestGpsMsg is not None:
-					print("calling NavigationClient")
-					output, error = run_shell("python NavigationClient.py",lat,long,data[latestGpsMsg])
-					output = str(output, "utf-8")
-					print("output: " + output)
-				print("no GPS data, not calling NavigationClient")
-				break
-			i++
+    else:
+        print("feedback:", feedback)
+        lat = 45.520495; long = -73.392162;
+        data = feedback.split("\n") # last message will be an empty string (or have "\r")
+        data = reversed(data)
+        i = 1 #skip the empty string
+        while True:
+            if data[i].find("GPS") != -1: # check if GPS is in the message
+                if latestGpsMsg is None:
+                    latestGpsMsg = i
+                if data[i].find("OK") is not -1: # there is GPS data
+                    print("calling NavigationClient")
+                    output, error = run_shell("python NavigationClient.py",lat,long,data[i])
+                    output = str(output, "utf-8")
+                    print("output: " + output)
+                    break
+            if i>=5:
+                if latestGpsMsg is not None:
+                    print("calling NavigationClient")
+                    output, error = run_shell("python NavigationClient.py",lat,long,data[latestGpsMsg])
+                    output = str(output, "utf-8")
+                    print("output: " + output)
+                print("no GPS data, not calling NavigationClient")
+                break
+            i++
 
     return jsonify(success=True, cmd=cmd, feedback=feedback, error=error)
 
