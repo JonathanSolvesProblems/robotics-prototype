@@ -2,7 +2,7 @@ import serial.tools.list_ports
 import sys
 from Nav_funs import Direction , Distance , Turning
 
-ser = serial.Serial('COM4' , 115200 )
+ser = serial.Serial('COM3' , 115200 )
 # if sys.platform.startswith('linux'):
 #     ports = list(serial.tools.list_ports.comports())
 #     first_port = ports[0].name
@@ -35,13 +35,13 @@ while True:
     if Location_info.find('GPS-OK') != -1:
         GPS_info_available = True
         temp = Location_info.split()
-        Rover['lat'] = temp[1]
-        Rover['lon'] = temp[2]
+        Rover['lat'] = float(temp[1])
+        Rover['lon'] = float(temp[2])
     elif Location_info.find('GPS-N/A') != -1:
         GPS_info_available = False
         print('GPS information is not available yet')
 
-    Rover['heading'] = Heading_info.split()[1]
+    Rover['heading'] = float(Heading_info.split()[1])
 
     if GPS_info_available == True:
 
@@ -52,8 +52,9 @@ while True:
 
         print('Destination is at : {} , {}'.format(Destination['lat'],Destination['lon']))
         print('Rover is currently at : {} , {}'.format(Rover['lat'],Rover['lon']))
-        print('Distance to the destination point is : {} meters'.format(Rov_to_des_distance))
+        print('Distance to the destination point is : {} meters'.format(round(Rov_to_des_distance)))
         if Direction_adjust < 0:
             print('Turn left by {} degrees and drive'.format(round(abs(Direction_adjust))))
         else:
             print('Turn right by {} degrees and drive'.format(round(Direction_adjust)))
+        print('\n')
