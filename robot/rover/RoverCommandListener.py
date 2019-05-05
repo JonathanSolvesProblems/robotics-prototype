@@ -60,11 +60,11 @@ if usb:
     # set up connection to arduino
     ports = list(serial.tools.list_ports.comports())
     is_rover = False
-
+    # if using at the CSA for just gps/imu, remove the len(ports) stuff and set is_rover above to true
     if len(ports) == 1:
         print("1 USB device detected")
         port = ports[0].name
-        ser = serial.Serial('/dev/' + port, 9600)
+        ser = serial.Serial('/dev/' + port, 115200)
 
         print("clearing buffer")
         while ser.in_waiting:

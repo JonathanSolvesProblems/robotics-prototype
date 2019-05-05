@@ -7,13 +7,21 @@ TinyGPSPlus gps;   // GPS object
 #include <Wire.h>
 #include <LSM303.h>
 
+// quickly switch to uart for walid. for fauzi, 
+//#define USE_UART 1
+#ifdef USE_UART
+#define UART_PORT Serial4
+#else
+#define UART_PORT Serial
+#endif
+
 LSM303 compass;
 
 void setup() {
   
-  Serial.begin(115200);
+  UART_PORT.begin(115200);
   
-  if (myI2CGPS.begin(Wire , 400000) == false)        // Wire1 corresponds to the SDA1,SCL1 on the Teensy 3.6 (pins 38,37)
+  if (myI2CGPS.begin(Wire2 , 400000) == false)        // Wire1 corresponds to the SDA1,SCL1 on the Teensy 3.6 (pins 38,37)
   {
     while(1);                     // This will freeze the code to have the user check wiring
   }
@@ -36,28 +44,28 @@ void loop() {
   {
     displayInfo();                  // Print the info on the serial monitor
   }
-  Serial.print("Heading");
-  Serial.print(" ");
-  Serial.print(heading);
-  Serial.print("\n");
-  delay(2000);                      // Delay figure to let the Python code handle the data, can be adjusted if needed
+  UART_PORT.print("Heading");
+  UART_PORT.print(" ");
+  UART_PORT.print(heading);
+  UART_PORT.print("\n");
+  delay(500);                      // Delay figure to let the Python code handle the data, can be adjusted if needed
 }
 
 void displayInfo()                 // The function that prints the info
 {
   if (gps.location.isValid())      // checks if valid location data is available 
   {
-    Serial.print("GPS-OK");          // string initials to allow the Pyhton code to pickup
-    Serial.print(" ");            // space
-    Serial.print(gps.location.lat(), 6);   // print the latitude with 6 digits after the point
-    Serial.print(" ");           // space
-    Serial.print(gps.location.lng(), 6);   // print the longitude with 6 digits after the point
-    Serial.print("--");             // new line
+    UART_PORT.print("GPS-OK");          // string initials to allow the Pyhton code to pickup
+    UART_PORT.print(" ");            // space
+    UART_PORT.print(gps.location.lat(), 6);   // print the latitude with 6 digits after the point
+    UART_PORT.print(" ");           // space
+    UART_PORT.print(gps.location.lng(), 6);   // print the longitude with 6 digits after the point
+    UART_PORT.print("--");             // new line
   }
   else
   {
-    Serial.print(F("GPS-N/A"));
-    Serial.print("--");
+    UART_PORT.print(F("GPS-N/A"));
+    UART_PORT.print("--");
   }
   
 }
