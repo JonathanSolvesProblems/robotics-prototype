@@ -9,7 +9,7 @@ import subprocess
 from urllib.parse import urlparse, unquote
 import flask
 from flask import jsonify, request
-from robot.comms.connection import Connection
+from connection import Connection
 
 app = flask.Flask(__name__)
 
@@ -371,7 +371,7 @@ def rover_drive():
                     print("output: " + output)
                 print("no GPS data, not calling NavigationClient")
                 break
-            i++
+            i+=1
 
     return jsonify(success=True, cmd=cmd, feedback=feedback, error=error)
 
