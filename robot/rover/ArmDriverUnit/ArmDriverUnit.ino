@@ -26,6 +26,7 @@
 */
 
 #include "Includes.h"
+#include <kinetis.h> //!<contains watchdog constants
 
 /* comms */
 char serialBuffer[BUFFER_SIZE]; //!< serial buffer used for early- and mid-stage testing without ROSserial
@@ -44,7 +45,7 @@ bool msgIsValid = false; //!< If true, the MCU will execute a command. Otherwise
 
 /* blink variables */
 bool msgCheck = false; //!< If a message was received, while this remains true, the MCU will blink
-enum blinkTypes {HEARTBEAT, GOOD_BLINK, BAD_BLINK}; //!< blink style depends on what's going on
+enum blinkTypes {HEARTBEAT, GOOD_BLINK, BAD_BLINK, BUDGE_BLINK}; //!< blink style depends on what's going on
 int blinkType = HEARTBEAT; //!< by default it should be the heartbeat. Will behave differently if message is received
 bool startBlinking = false; //!< if true, teensy blinks as response to a message
 int blinkCount = 0; //!< when it reaches max it goes back to heartbeat
@@ -92,8 +93,8 @@ void clearBlinkState(void); //!< sets some blink variables to zero
 void blinkLED(void); //!< blinks LED based on global variables
 void respondToLimitSwitches(void); //!< move motor back into software angle range. This function behaves differently each loop
 void homeArmMotors(void); //!< arm homing routine. This function behaves differently each loop
-void rebootTeensy(void); //!< reboots the teensy using the watchdog timer
-void kickDog(void); //!< resets the watchdog timer. If the teensy is stuck in a loop and this is not called, teensy resets.
+void rebootTeensy(); //!< reboots the teensy using the watchdog timer
+void kickDog(); //!< resets the watchdog timer. If the teensy is stuck in a loop and this is not called, teensy resets.
 // all interrupt service routines (ISRs) must be global functions to work
 // declare encoder interrupt service routines
 void m1_encoder_interrupt(void);
@@ -149,6 +150,8 @@ void setup() {
   pinSetup();
   initComms();
   initEncoders();
+  rebootTeensy(); //!< initializes the watchdog
+  kickDog();
   initLimitSwitches(); //!< \todo setJointAngleTolerance in here might need to be adjusted when gear ratio is adjusted!!! check other dependencies too!!!
   initSpeedParams();
   motor3.switchDirectionLogic(); // motor is wired backwards? replaced with dc, needs new test
@@ -175,7 +178,7 @@ void loop() {
   if (isHoming) { // not done homing the motors
     homeArmMotors(); // Homing functionality ignores most message types. This function behaves differently each loop
   }
-
+  String receivedMessage; // JOSH
   /* message parsing functionality */
   motorCommand = emptyMotorCommand; // reset motorCommand so the microcontroller doesn't try to move a motor next loop
   msgReceived = false;
@@ -190,9 +193,10 @@ void loop() {
     // if a message was sent to the Teensy
     msgReceived = true;
     UART_PORT.readBytesUntil(10, serialBuffer, BUFFER_SIZE); // read through it until NL
-#ifdef DEBUG_MAIN
+    receivedMessage = String(serialBuffer); // JOSH
+//#ifdef DEBUG_MAIN
     UART_PORT.print("GOT: "); UART_PORT.println(serialBuffer); // send back what was received
-#endif
+//#endif
     Parser.parseCommand(motorCommand, serialBuffer); // read serialBuffer and stuff the data into motorCommand
     memset(serialBuffer, 0, BUFFER_SIZE); // empty the buffer
     msgIsValid = Parser.verifCommand(motorCommand); // verify the data to make sure it's valid
@@ -395,6 +399,7 @@ void loop() {
 #endif
           }
           else if (motorCommand.budgeCommand) { // make motors move until the command isn't sent anymore
+            blinkType = BUDGE_BLINK;
             for (int i = 0; i < NUM_MOTORS; i++) {
               if (motorCommand.motorsToMove[i]) {
 #if defined(DEVEL_MODE_1) || defined(DEVEL_MODE_2)
@@ -470,9 +475,13 @@ void loop() {
       }
     } // end of executing valid commands
     else { // alert the user that it's a bad command
-      blinkType = BAD_BLINK; // alert the blink check that it was a bad message
+      if (receivedMessage != ""){ //ignores empty strings JOSH
+        blinkType = BAD_BLINK; // alert the blink check that it was a bad message
+      }
 #if defined(DEVEL_MODE_1) || defined(DEVEL_MODE_2)
-      UART_PORT.println("$E,Error: bad motor command");
+      //UART_PORT.println("$E,Error: bad motor command");
+      UART_PORT.print("$E,Error: bad motor command. GOT: "); // JOSH
+      UART_PORT.println(receivedMessage); // JOSH
 #elif defined(DEBUG_MODE) || defined(USER_MODE)
       nh.logerror("error: bad motor command");
 #endif
@@ -488,6 +497,7 @@ void loop() {
     clearBlinkState();
   }
   blinkLED(); // decides how to blink based on global variables
+  kickDog();
 } // end of loop
 
 /* initialization functions */
@@ -649,7 +659,7 @@ void initMotorTimers(void) {
 /* functions which apply to all motors or to the teensy in general */
 void printMotorAngles(void) {
 #if defined(DEVEL_MODE_1) || defined(DEVEL_MODE_2)
-  UART_PORT.print("Motor Angles: ");
+  UART_PORT.print("@Motor Angles: ");
   for (int i = 0; i < NUM_MOTORS; i++) {
     motorArray[i]->calcCurrentAngle();
     UART_PORT.print(motorArray[i]->getSoftwareAngle());
@@ -716,6 +726,25 @@ void blinkLED(void) {
       }
     }
   }
+  else if (blinkType == BUDGE_BLINK && sinceBlink >= BUDGE_TIMEOUT) {
+    bool isBudging = false;
+    for (int i=0;i<NUM_MOTORS;i++) {
+      if (motorArray[i]->isBudging){
+        isBudging = true;
+        break;
+      }
+    }
+    if(isBudging == false){
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+      blinkType = HEARTBEAT;
+      clearBlinkState();
+      Serial.println("stopping blink");
+    }
+    else {
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN)); // toggle pin state
+    }
+    sinceBlink = 0;    
+  } 
   else { // do nothing
     ;
   }
@@ -819,28 +848,29 @@ void homeArmMotors(void) { //!< \todo print homing debug just for motors which a
     homingMotor = -1; // reset it until next homing call
   }
 }
-void rebootTeensy(void) { //!< software reset function using watchdog timer
-  WDOG_UNLOCK = WDOG_UNLOCK_SEQ1;
-  WDOG_UNLOCK = WDOG_UNLOCK_SEQ2;
-  // The next 2 lines set the time-out value.
-  WDOG_TOVALL = 15; // This is the value (ms) that the watchdog timer compare itself to.
-  WDOG_TOVALH = 0; // End value (ms) WDT compares itself to.
-  WDOG_STCTRLH = (WDOG_STCTRLH_ALLOWUPDATE | WDOG_STCTRLH_WDOGEN |
-                  WDOG_STCTRLH_WAITEN | WDOG_STCTRLH_STOPEN); // Enable WDG
-  WDOG_PRESC = 0; //Sets watchdog timer to tick at 1 kHz inseast of 1/4 kHz
-  while (1); // infinite do nothing loop -- wait for the countdown
-}
+
 /*! This function "kicks the dog". Refreshes its time-out counter. If not refreshed, system will be reset.
 This reset is triggered when the time-out value set in rebootTeensy() is exceeded.
 Calling the kickDog() function will reset the time-out counter.
 
 \todo Figure out where to implement kickDog() function into loop() and what time-out value to set for rebootTeensy().
 */
-void kickDog(void) {  
+void kickDog() {  
   noInterrupts();
   WDOG_REFRESH = 0xA602;
   WDOG_REFRESH = 0xB480;
   interrupts();
+}
+
+void rebootTeensy() { //!< software reset function using watchdog timer
+  WDOG_UNLOCK = WDOG_UNLOCK_SEQ1;
+  WDOG_UNLOCK = WDOG_UNLOCK_SEQ2; // The next 2 lines set the time-out value.
+  WDOG_TOVALL = 0; // This is the value (ms) that the watchdog timer compare itself to.
+  WDOG_TOVALH = 200; // End value (ms) WDT compares itself to.
+  WDOG_STCTRLH = (WDOG_STCTRLH_ALLOWUPDATE | WDOG_STCTRLH_WDOGEN |
+  WDOG_STCTRLH_WAITEN | WDOG_STCTRLH_STOPEN | WDOG_STCTRLH_CLKSRC); // Enable WDG
+  WDOG_PRESC = 0; //Sets watchdog timer to tick at 1 kHz inseast of 1/4 kHz
+  /*while (1); // infinite do nothing loop -- wait for the countdown */
 }
 
 /* timer interrupts */
