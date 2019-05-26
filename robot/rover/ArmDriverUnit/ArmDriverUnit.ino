@@ -158,9 +158,25 @@ void setup() {
   motor6.switchDirectionLogic(); // positive angles now mean opening
   initMotorTimers();
 
+  delay(1000);
+  Serial.print("RCM_SRS0 - reset status: "); //!< RCM Status register, provides information on reset source
+  Serial.println(RCM_SRS0);
+  switch(RCM_SRS0){ //!< Will display the source of the reset that last occured. Will look into adding more sources and other uses for the register
+    case 2: 
+          Serial.println("Low-voltage reset occured");
+          break;
+    case 32: // Watchdog reset
+          Serial.println("Watchdog reset occured");
+          break;
+    case 64: // Manual Reset
+          Serial.println("Power-on/manual reset occured"); // actual power-on might be 128 or 130 but need to check...
+          break;   
+  }
+  RCM_SRS0 = 0; // !<Resets RCM register values
+  
   // reset the elapsedMillis variables so that they're fresh upon entering the loop()
   sinceAnglePrint = 0;
-}
+} 
 
 /*! \brief Main code which loops forever. Parses commands, prints motor angles and blinks the builtin LED.
 
@@ -173,6 +189,7 @@ void setup() {
    \todo Check to see if any global variables can be turned into static variables inside loop()
    \todo I noticed that sending a new move command while motors are moving messes with open loop calculations?
 */
+
 void loop() {
   respondToLimitSwitches(); // limit switch checks occur before listening for commands. This function behaves differently each loop
   if (isHoming) { // not done homing the motors
@@ -497,7 +514,7 @@ void loop() {
     clearBlinkState();
   }
   blinkLED(); // decides how to blink based on global variables
-  kickDog();
+  kickDog(); //refreshes watchdog time-out
 } // end of loop
 
 /* initialization functions */
@@ -735,15 +752,15 @@ void blinkLED(void) {
       }
     }
     if(isBudging == false){
-      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN)); // toggle pin state OFF
       blinkType = HEARTBEAT;
       clearBlinkState();
       Serial.println("stopping blink");
     }
     else {
-      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN)); // toggle pin state
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN)); // toggle pin state ON
     }
-    sinceBlink = 0;    
+    sinceBlink = 0;
   } 
   else { // do nothing
     ;
@@ -865,12 +882,11 @@ void kickDog() {
 void rebootTeensy() { //!< software reset function using watchdog timer
   WDOG_UNLOCK = WDOG_UNLOCK_SEQ1;
   WDOG_UNLOCK = WDOG_UNLOCK_SEQ2; // The next 2 lines set the time-out value.
-  WDOG_TOVALL = 0; // This is the value (ms) that the watchdog timer compare itself to.
-  WDOG_TOVALH = 200; // End value (ms) WDT compares itself to.
+  WDOG_TOVALL = 0; // Start time-out value (ms)
+  WDOG_TOVALH = 200; // End value (ms) WDT compares itself to. If reached, reboot will occur
   WDOG_STCTRLH = (WDOG_STCTRLH_ALLOWUPDATE | WDOG_STCTRLH_WDOGEN |
   WDOG_STCTRLH_WAITEN | WDOG_STCTRLH_STOPEN | WDOG_STCTRLH_CLKSRC); // Enable WDG
   WDOG_PRESC = 0; //Sets watchdog timer to tick at 1 kHz inseast of 1/4 kHz
-  /*while (1); // infinite do nothing loop -- wait for the countdown */
 }
 
 /* timer interrupts */
