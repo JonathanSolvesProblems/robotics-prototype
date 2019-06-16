@@ -95,6 +95,18 @@ String getValue(String data, char separator, int index);//splits input string to
 
 Servo table;
 
+class Motor{
+  public:
+  void PWMDC(){};
+  void BinaryDC (){};
+  void ServoM (){};
+  
+}
+/*
+Motor motorObject;
+motorObject.PWMDC();
+*/
+
 void setup() {
 
   UART_PORT.begin(115200); UART_PORT.setTimeout(10);
