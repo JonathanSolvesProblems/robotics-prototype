@@ -56,7 +56,7 @@ while True:
         switch_channel(i)
         ser = serial.Serial('/dev/ttySAC0', 115200)
         msg = str(i) + ',OK'
-        ser.write(str.encode(msg))
+        ser.write(str.encode(msg + '\n'))
         ser.close()
         sent_time_stamp = str(datetime.now())
 
