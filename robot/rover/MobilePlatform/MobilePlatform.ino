@@ -176,39 +176,33 @@ void loop() {
 
     if (sinceFeedbackPrint > FEEDBACK_PRINT_INTERVAL && Cmds.isActivated) {
         if (Cmds.isEnc) {
-            print("ASTRO Motor Speeds: ");
+            print("ASTRO Motor speeds: ");
 
             print(RF.getCurrentVelocity());
-            print(" ");
+            print(", ");
             print(RM.getCurrentVelocity());
-            print(" ");
+            print(", ");
             print(RB.getCurrentVelocity());
-            print(" ");
+            print(", ");
             print(LF.getCurrentVelocity());
-            print(" ");
+            print(", ");
             print(LM.getCurrentVelocity());
-            print(" ");
+            print(", ");
             println(LB.getCurrentVelocity());
 
             roverVelocityCalculator();
 
-            print("ASTRO");
-            print(" Desired Velocities");
-
-            print(RF.desiredVelocity);
-            print(" ");
-            print(RM.desiredVelocity);
-            print(" ");
-            print(RB.desiredVelocity);
-            print(" ");
-            print(LF.desiredVelocity);
-            print(" ");
-            print(LM.desiredVelocity);
-            print(" ");
-            println(LB.desiredVelocity);
+            print("ASTRO Desired velocities: ");
+            print(String(RF.desiredVelocity) + ", ");
+            print(String(RM.desiredVelocity) + ", ");
+            print(String(RB.desiredVelocity) + ", ");
+            print(String(LF.desiredVelocity) + ", ");
+            print(String(LM.desiredVelocity) + ", ");
+            println(String(LB.desiredVelocity));
 
         }
         else {
+            print("ASTRO Desired velocities: ");
             print(String(RF.desiredVelocity) + ", ");
             print(String(RM.desiredVelocity) + ", ");
             print(String(RB.desiredVelocity) + ", ");
@@ -263,14 +257,19 @@ void roverVelocityCalculator(void) {
     linearVelocity = (rightLinearVelocity - leftLinearVelocity)  / 6;
     rotationalVelocity = (leftLinearVelocity + rightLinearVelocity) / wheelBase;
 
-    print("ASTRO ");
-    print("Linear velocity ");
+    /*
+    print("ASTRO Linear velocity: ");
     print(linearVelocity);
     print(" m/s ");
 
-    print(" Rotational Velocity ");
+    print(" Rotational velocity ");
     print(rotationalVelocity);
     println(" m^2/6 ");
+    */
+    // technically it's linear speed (no direction) and angular velocity
+    print("ASTRO Twist: ");
+    print(linearVelocity); print(" ");
+    println(rotationalVelocity);
 }
 
 void print(String msg) {

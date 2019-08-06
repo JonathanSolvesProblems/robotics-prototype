@@ -5,10 +5,9 @@ import traceback
 import time
 import re
 
-import serial # pyserial
-import serial.tools.list_ports # pyserial
-#from robot.comms.uart import Uart
-#import from mcuSerial import McuSerial # this isn't anything yet, just a copy of uart.py
+# pyserial
+import serial
+import serial.tools.list_ports
 
 import rospy
 from std_msgs.msg import String, Header, Float32
@@ -172,7 +171,7 @@ def subscriber_callback(message):
 
 def publish_joint_states(message):
     # parse the data received from Teensy
-    lhs,message = message.split('Motor Speeds: ')
+    lhs,message = message.split('Motor speeds: ')
     speeds = message.split(', ')
     # create the message to be published
     msg = JointState()
@@ -187,6 +186,20 @@ def publish_joint_states(message):
     # publish it
     speedPub.publish(msg)
     rospy.logdebug(msg.position)
+    return
+
+def publish_twist(message):
+    # parse the data received from Teensy
+    lhs,message = message.split('Twist: ')
+    linearVelocity,angularVelocity = message.split(' ')
+    # create the message to be published
+    msg = Twist()
+    msg.linear.x = float(linearVelocity)
+    msg.angular.x = float(angularVelocity)
+    # publish it
+    twistPub.publish(msg)
+    rospy.logdebug(msg.linear.x)
+    rospy.logdebug(msg.angular.x)
     return
 
 def publish_nav_states(message):
@@ -241,6 +254,10 @@ if __name__ == '__main__':
     rospy.loginfo('Beginning to publish to "'+speed_pub_topic+'" topic')
     speedPub = rospy.Publisher(speed_pub_topic, JointState, queue_size=10)
 
+    twist_pub_topic = '/rover_twist'
+    rospy.loginfo('Beginning to publish to "'+twist_pub_topic+'" topic')
+    twistPub = rospy.Publisher(twist_pub_topic, Twist, queue_size=10)
+
     nav_pub_topic = '/rover_position'
     rospy.loginfo('Beginning to publish to "'+nav_pub_topic+'" topic')
     # will either make my own message type or use a standard one
@@ -287,9 +304,11 @@ if __name__ == '__main__':
                 except:
                     rospy.logwarn('trouble reading from serial port')
                 if feedback is not None:
-                    if 'Motor Speeds' in feedback:
+                    if 'Motor speeds' in feedback:
                         #rospy.loginfo(feedback)
                         publish_joint_states(feedback)
+                    elif 'Twist' in feedback:
+                        publish_twist(feedback)
                     elif 'Battery voltage' in feedback:
                         left,voltage = feedback.split('Battery voltage: ')
                         vBatPub.publish(float(voltage))
@@ -304,11 +323,11 @@ if __name__ == '__main__':
                         else:
                             if 'WARNING' in feedback:
                                 rospy.logwarn(feedback)
-                            #rospy.loginfo(feedback)
-                            #else:
-                            #    feedbackPub.publish(feedback)
-                            #this next line is annoying, should be filtered somehow like the above commented code
-                            feedbackPub.publish(feedback)
+                            elif 'Desired' in feedback: # a hack because fauzi's code vomits this out
+                                if '0.00 0.00 0.00 0.00 0.00 0.00' in feedback:
+                                    pass
+                            else:
+                                feedbackPub.publish(feedback)
                 else:
                     rospy.loginfo('got raw data: '+data)
             rospy.Rate(100).sleep()
