@@ -551,41 +551,65 @@ $(document).ready(() => {
       // copy code from above
     }
   })
-})
 
-function pingDevice(device) {
-  if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
-    switch(device)
-    {
-      case "Arm" :
-        sendArmRequest('ping', function (msgs) {})
-        break;
-      case "Rover" :
-        sendRoverRequest('ping', function (msgs) {})
-        break;
-      case "Odroid":
-      default:
-        pingOdroid()
-        break;
+  function pingDevice(device) {
+    if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
+      switch(device)
+      {
+        case "Arm" :
+          sendArmRequest('ping', function (msgs) {})
+          break;
+        case "Rover" :
+          sendRoverRequest('ping', function (msgs) {})
+          break;
+        case "Odroid":
+        default:
+          pingOdroid()
+          break;
+      }
+      lastCmdSent = new Date().getTime()
     }
+  }
+
+  function pingOdroid() {
+    appendToConsole('pinging odroid')
+    $.ajax('/ping_rover', {
+      success: function (data) {
+        appendToConsole(data.ping_msg)
+        if (!data.ros_msg.includes('Response')) {
+          appendToConsole('No response from ROS ping_acknowledgment service')
+        } else {
+          appendToConsole(data.ros_msg)
+        }
+      },
+      error: function () {
+        console.log('An error occured')
+      }
+    })
     lastCmdSent = new Date().getTime()
   }
+
+  $(".wheel-slider").roundSlider({
+    animation: "false",
+    sliderType: "min-range",
+    editableTooltip: true,
+    radius: 65,
+    width: 16,
+    value: 0,
+    handleSize: 5,
+    handleShape: "square",
+    circleShape: "pie",
+    startAngle: 315,
+    tooltipFormat: "changeTooltip"
+});
+
+$(".rs-block .rs-inner").css("background-color", "#900");
+$(".rs-control .rs-overlay").css("background-color", "#900");
+
+function changeTooltip(e) {
+    var val = e.value;
+
+    return val + " km/h" + "<div>" + speed + "<div>";
 }
 
-function pingOdroid() {
-  appendToConsole('pinging odroid')
-  $.ajax('/ping_rover', {
-    success: function (data) {
-      appendToConsole(data.ping_msg)
-      if (!data.ros_msg.includes('Response')) {
-        appendToConsole('No response from ROS ping_acknowledgment service')
-      } else {
-        appendToConsole(data.ros_msg)
-      }
-    },
-    error: function () {
-      console.log('An error occured')
-    }
-  })
-  lastCmdSent = new Date().getTime()
-}
+})
