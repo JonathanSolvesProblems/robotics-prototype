@@ -129,6 +129,11 @@ $(document).ready(function () {
     sendRoverCommand('stop')
   })
 
+  $(".wheel-slider").change(function() {
+    let wheel_id = $(this).attr('motor_id')
+    let value = parseInt($(this)[0].textContent)
+  })
+
   $('#activate-rover-btn').on('click', function (event) {
     event.preventDefault()
     // click makes it checked during this time, so trying to enable
