@@ -132,6 +132,7 @@ $(document).ready(function () {
   $(".wheel-slider").change(function() {
     let wheel_id = $(this).attr('motor_id')
     let value = parseInt($(this)[0].textContent)
+    sendRoverCommand(wheel_id + ":" + value)
   })
 
   $('#activate-rover-btn').on('click', function (event) {
@@ -156,6 +157,7 @@ $(document).ready(function () {
       })
     }
   })
+
   $('#toggle-rover-listener-btn').on('click', function (event) {
     event.preventDefault()
     let serialType = $('#serial-type')
@@ -214,6 +216,18 @@ $(document).ready(function () {
     }
   })
 
+  $('#activate-rover-btn').on('click', function(event){
+    event.preventDefault()
+    let isChecked = $(this).checked
+    sendRoverRequest(isChecked ? "steer-off" : "steer-on", function(msgs){
+        if(msgs[0])
+        {
+          console.log("Steering " + !isChecked)
+          $(this).checked = !isChecked
+        }
+    })
+  })
+
   $('#send-antenna-data-btn').on('click', function (event) {
     event.preventDefault()
     let goodInput = true
@@ -243,6 +257,7 @@ $(document).ready(function () {
       $('#antenna-unchanging').show()
     }
   })
+
   $('#change-antenna-data-btn').on('click', function (event) {
     event.preventDefault()
     $('#antenna-inputs').show()
@@ -256,6 +271,7 @@ $(document).ready(function () {
       appendToConsole('latitude field empty!')
       goodInput = false
     }
+    
     if (!$('#goal-longitude-input').val()) {
       appendToConsole('longitude field empty!')
       goodInput = false
