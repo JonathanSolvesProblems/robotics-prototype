@@ -209,3 +209,14 @@ textarea#rover-log {
   border-radius: 50%;
   display: inline-block;
 }
+
+.wheel-controls
+{
+  background-color:#b0b0b0;
+  border: 3px solid black
+}
+
+.wheel-slider
+{
+  margin:20px
+}

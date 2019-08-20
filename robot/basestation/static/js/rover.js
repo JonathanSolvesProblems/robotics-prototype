@@ -129,12 +129,6 @@ $(document).ready(function () {
     sendRoverCommand('stop')
   })
 
-  $(".wheel-slider").change(function() {
-    let wheel_id = $(this).attr('motor_id')
-    let value = parseInt($(this)[0].textContent)
-    sendRoverCommand(wheel_id + ":" + value)
-  })
-
   $('#activate-rover-btn').on('click', function (event) {
     event.preventDefault()
     // click makes it checked during this time, so trying to enable
@@ -271,7 +265,7 @@ $(document).ready(function () {
       appendToConsole('latitude field empty!')
       goodInput = false
     }
-    
+
     if (!$('#goal-longitude-input').val()) {
       appendToConsole('longitude field empty!')
       goodInput = false
@@ -291,6 +285,19 @@ $(document).ready(function () {
     event.preventDefault()
     $('#goal-inputs').show()
     $('#goal-unchanging').hide()
+  })
+
+  $('.wheel-slider').slider();
+  $('.wheel-slider').slider({
+    values:[-100,100],
+    value:0,
+    change:function(arg){
+      console.log($(arg.target).attr("wheel_id"))
+      let wheel_id = 0//arg.target.attr('motor_id')
+      let value = 5;
+      console.log(wheel_id)
+      sendRoverCommand(wheel_id + ":" + value)
+    }
   })
 })
 

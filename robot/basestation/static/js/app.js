@@ -588,28 +588,4 @@ $(document).ready(() => {
     })
     lastCmdSent = new Date().getTime()
   }
-
-  $(".wheel-slider").roundSlider({
-    animation: "false",
-    sliderType: "min-range",
-    editableTooltip: true,
-    radius: 65,
-    width: 16,
-    value: 0,
-    handleSize: 5,
-    handleShape: "square",
-    circleShape: "pie",
-    startAngle: 315,
-    tooltipFormat: "changeTooltip"
-});
-
-$(".rs-block .rs-inner").css("background-color", "#900");
-$(".rs-control .rs-overlay").css("background-color", "#900");
-
-function changeTooltip(e) {
-    var val = e.value;
-
-    return val + " km/h" + "<div>" + speed + "<div>";
-}
-
 })
