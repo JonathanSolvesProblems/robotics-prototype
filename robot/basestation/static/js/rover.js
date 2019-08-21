@@ -292,10 +292,9 @@ $(document).ready(function () {
     values:[-100,100],
     value:0,
     change:function(arg){
-      console.log($(arg.target).attr("wheel_id"))
+      console.log($(arg.target).attr("motor_id"))
       let wheel_id = 0//arg.target.attr('motor_id')
       let value = 5;
-      console.log(wheel_id)
       sendRoverCommand(wheel_id + ":" + value)
     }
   })
