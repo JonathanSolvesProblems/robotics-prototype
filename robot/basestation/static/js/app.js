@@ -1,6 +1,7 @@
-$(function() {
-    const Site = {
-        init: function() {
+$(document).ready(() => {
+  const Site = {
+    init () {
+            initR();
             this.bindEventHandlers();
         },
         bindEventHandlers: function() {
@@ -160,6 +161,6 @@ $(function() {
             },
         ]
     };
-    
+
     Site.init();
-})();
+})

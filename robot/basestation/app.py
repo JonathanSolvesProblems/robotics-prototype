@@ -3,17 +3,22 @@
 # Flask is light-weight and modular so this is actually all we need to set up a simple HTML page
 
 import flask
+import os as os
 
-app = flask.Flask(__name__)
-
+app = flask.Flask(__name__)#, static_folder=os.path.abspath('~/catkin_rover/src/'))
 
 # Once we launch this, this will route us to the "../" page or index page and
 # automatically render the Rover GUI
 @app.route("/")
 def index():
     return flask.render_template("AsimovOperation.html")
-
-
+'''
+@app.route('/<path:filename>', methods=['GET'])
+def serveFile(filename):
+    if request.method == 'GET':
+        return send_from_directory('./'+path, filename)
+        return send_from_directory(static_file_dir, path)
+        '''
 # Automatic controls
 @app.route("/click_btn_pitch_up")
 def click_pitch_up():

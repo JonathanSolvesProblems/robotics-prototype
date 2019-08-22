@@ -30,7 +30,8 @@
     var urdfClient = new ROS3D.UrdfClient({
       ros : ros,
       tfClient : tfClient,
-      path : 'http://resources.robotwebtools.org/',
+      //path : 'http://static.robotwebtools.org/',
+      path : 'http://localhost:5000/static/',
       rootObject : viewer.scene,
       loader : ROS3D.COLLADA_LOADER_2
     });
