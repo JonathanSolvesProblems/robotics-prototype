@@ -125,6 +125,12 @@ function initRosWeb () {
     messageType: 'std_msgs/String'
   })
 
+  motion_listener = new ROSLIB.Topic({
+    ros: ros,
+    name: 'px4flow/opt_flow',
+    messageType: 'px_comm/OpticalFlow'
+  })
+
   science_data_listener.subscribe(function (message) {
     appendToConsole(message.data, true, false)
     // isActivated, drillDirection, elevatorDirection

@@ -689,4 +689,13 @@ function gameLoop () {
   setTimeout(gameLoop, 5)
 }
 
+motion_listener.subscribe(function(msg) {
+
+  let vx = msg["velocity_x"]
+  let vy = msg["velocity_y"]
+  let v = Math.sqrt(vx*vx + vy*vy)
+  $("#motion-velocity")[0].innerText = Math.round(v * 100)/100 + " m/s"
+  $("#motion-ground-distance")[0].innerText = Math.round(msg["ground_distance"] * 100) / 100 + " m"
+})
+
 gameLoop()
