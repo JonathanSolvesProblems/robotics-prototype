@@ -289,12 +289,13 @@ $(document).ready(function () {
 
   $('.wheel-slider').slider();
   $('.wheel-slider').slider({
-    values:[-100,100],
+    min:-100,
+    max:100,
     value:0,
-    change:function(arg){
-      console.log($(arg.target).attr("motor_id"))
-      let wheel_id = 0//arg.target.attr('motor_id')
-      let value = 5;
+    slide:function(arg){
+      let wheel_id = $(arg.target).attr("motor_id")
+      let value = $(arg.target).slider("value")
+      console.log(wheel_id + ":" + value)
       sendRoverCommand(wheel_id + ":" + value)
     }
   })
