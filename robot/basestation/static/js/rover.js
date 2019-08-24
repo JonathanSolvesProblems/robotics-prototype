@@ -287,17 +287,37 @@ $(document).ready(function () {
     $('#goal-unchanging').hide()
   })
 
+
+  function wheelSliderChange(arg) {
+    let wheel_id = $(arg.target).attr("motor_id")
+    let value = $(arg.target).slider("value")
+    console.log(wheel_id + ":" + value)
+    $($(arg.target).siblings(".wheel-input")[0]).val(value)
+    sendRoverCommand(wheel_id + ":" + value)
+  }
+
   $('.wheel-slider').slider();
   $('.wheel-slider').slider({
     min:-100,
     max:100,
     value:0,
     slide:function(arg){
-      let wheel_id = $(arg.target).attr("motor_id")
-      let value = $(arg.target).slider("value")
-      console.log(wheel_id + ":" + value)
-      sendRoverCommand(wheel_id + ":" + value)
+      wheelSliderChange(arg)
+    },
+    change:function(arg){
+      wheelSliderChange(arg)
     }
+  })
+
+  function inputChange(arg) {
+    let value = $(arg.target)[0].value
+    $($(arg.target).siblings(".wheel-slider")[0]).slider("value", value)
+  }
+
+  $('.wheel-input').val(0)
+
+  $('.wheel-input').on("input", function(arg){
+    inputChange(arg)
   })
 })
 

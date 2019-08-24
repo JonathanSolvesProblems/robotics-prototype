@@ -212,11 +212,22 @@ textarea#rover-log {
 
 .wheel-controls
 {
-  background-color:#b0b0b0;
+  background-color:#4682B4;
   border: 3px solid black
 }
 
 .wheel-slider
 {
-  margin:20px
+  margin:20px;
+  width:300px;
+}
+
+.wheel-control
+{
+  display:flex;
+}
+
+.wheel-input
+{
+  width:75px;
 }
