@@ -9,3 +9,16 @@
 **/venv
 **/env
 **/.envrc
+**/stress-test-results_*
+**/node_modules
+**/configEthernet.log
+**/emailer.log
+**/rosRoverStart.log
+**/status_done
+**/rospackages/build
+**/rospackages/devel
+**/odroid_rx.txt
+**/tmp
+**/c_cpp_properties.json
+**/img*.jpg
+
