@@ -211,7 +211,7 @@ $(document).ready(function () {
     }
   })
 
-  $('#activate-rover-btn').on('click', function(event){
+  $('#steering-rover-btn').on('click', function(event){
     event.preventDefault()
     let isChecked = $(this).checked
     sendRoverRequest(isChecked ? "steer-off" : "steer-on", function(msgs){

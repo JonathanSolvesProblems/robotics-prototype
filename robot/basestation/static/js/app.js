@@ -1,4 +1,10 @@
 /* eslint-disable no-unused-lets */
+function printErrToConsole(msg)
+{
+  if(!msg[0])
+    appendToConsole(msg[1])
+}
+
 $(document).ready(() => {
   const Site = {
     init () {
@@ -558,30 +564,7 @@ $(document).ready(() => {
       // copy code from above
     }
   })
-
-<<<<<<< HEAD
-  function pingDevice(device) {
-    if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
-      switch(device)
-      {
-        case "Arm" :
-          sendArmRequest('ping', function (msgs) {})
-          break;
-        case "Rover" :
-          sendRoverRequest('ping', function (msgs) {})
-          break;
-        case "Odroid":
-        default:
-          pingOdroid()
-          break;
-      }
-      lastCmdSent = new Date().getTime()
-=======
-function printErrToConsole(msg)
-{
-  if(!msg[0])
-    appendToConsole(msg[1])
-}
+})
 
 function pingDevice(device) {
   if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
@@ -597,30 +580,9 @@ function pingDevice(device) {
       default:
         pingOdroid()
         break;
->>>>>>> master
     }
-  }
-<<<<<<< HEAD
-
-  function pingOdroid() {
-    appendToConsole('pinging odroid')
-    $.ajax('/ping_rover', {
-      success: function (data) {
-        appendToConsole(data.ping_msg)
-        if (!data.ros_msg.includes('Response')) {
-          appendToConsole('No response from ROS ping_acknowledgment service')
-        } else {
-          appendToConsole(data.ros_msg)
-        }
-      },
-      error: function () {
-        console.log('An error occured')
-      }
-    })
     lastCmdSent = new Date().getTime()
   }
-})
-=======
 }
 
 function pingOdroid(timeoutVal=REQUEST_TIMEOUT) {
@@ -649,4 +611,3 @@ function pingOdroid(timeoutVal=REQUEST_TIMEOUT) {
   })
   lastCmdSent = new Date().getTime()
 }
->>>>>>> master
