@@ -4,6 +4,7 @@ ROVER="$ROBOTICS_WS/robot/rover"
 ROSPACKAGES="$ROBOTICS_WS/robot/rospackages"
 BASH_A="~/.bash_aliases"
 NANORC="~/.nanorc"
+CATKIN_WS="$HOME/catkin_ws"
 
 # general shortcuts
 alias ..="cd .."

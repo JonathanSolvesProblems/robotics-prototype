@@ -1,0 +1,6 @@
+<launch>
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"></include>
+	<node pkg="aliencontrol" type="aliencontrol" name="aliencontrol_gui">
+    		<param name="cmd" value="'python3 /home/cedric/Documents/robotics-prototype/robot/basestation/app.py > guilog.log'"/>
+	</node>
+</launch>
