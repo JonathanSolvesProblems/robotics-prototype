@@ -7,3 +7,5 @@
 subdirs(gtest)
 subdirs(tf2_web_republisher)
 subdirs(colarm)
+subdirs(collarm)
+subdirs(colllarm)

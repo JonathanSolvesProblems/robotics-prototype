@@ -322,6 +322,18 @@ colarm_BINARY_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot
 //Value Computed by CMake
 colarm_SOURCE_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/src/colarm
 
+//Value Computed by CMake
+collarm_BINARY_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/collarm
+
+//Value Computed by CMake
+collarm_SOURCE_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/src/collarm
+
+//Value Computed by CMake
+colllarm_BINARY_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/colllarm
+
+//Value Computed by CMake
+colllarm_SOURCE_DIR:STATIC=/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/src/colllarm
+
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/kinetic/share/cpp_common/cmake
 
@@ -588,7 +600,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

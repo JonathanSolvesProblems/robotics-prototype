@@ -119,6 +119,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/gtest/cmake_install.cmake")
   include("/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/tf2_web_republisher/cmake_install.cmake")
   include("/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/colarm/cmake_install.cmake")
+  include("/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/collarm/cmake_install.cmake")
+  include("/home/vashmata/Programming/git/robotics-prototype/robot/rospackages/build/colllarm/cmake_install.cmake")
 
 endif()
 
