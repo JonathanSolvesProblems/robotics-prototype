@@ -13,7 +13,7 @@
 #define SENSOR_READ_INTERVAL 200
 #define SENSOR_TIMEOUT 20
 #define THROTTLE_TIMEOUT 200
-#define MOTOR_CONTROL_INTERVAL 20
+#define MOTOR_CONTROL_INTERVAL 10
 
 /*
   choosing serial vs serial1 should be compile-time: when it's plugged into the pcb,
@@ -157,7 +157,7 @@ void loop() {
 
     if (Cmds.sinceThrottle > THROTTLE_TIMEOUT && Cmds.throttleTimeOut) Cmds.stop(true);
 
-    if (sinceMC > MOTOR_CONTROL_INTERVAL) {
+    if (sinceMC > MOTOR_CONTROL_INTERVAL && Cmds.isActivated) {
         RF.calcCurrentVelocity();
         RM.calcCurrentVelocity();
         RB.calcCurrentVelocity();
@@ -171,7 +171,8 @@ void loop() {
         LF.setVelocity(LF.desiredDirection, fabs(LF.desiredVelocity), LF.getCurrentVelocity());
         LM.setVelocity(LM.desiredDirection, fabs(LM.desiredVelocity), LM.getCurrentVelocity());
         LB.setVelocity(LB.desiredDirection, fabs(LB.desiredVelocity), LB.getCurrentVelocity());
-
+        
+        sinceMC = 0;
     }
 
     if (sinceFeedbackPrint > FEEDBACK_PRINT_INTERVAL && Cmds.isActivated) {
@@ -468,6 +469,8 @@ void lf_encoder_interrupt(void) {
     LF.dt += micros() - LF.prevTime;
     LF.prevTime = micros();
     LF.encoderCount++;
+//    Serial.println(LF.dt);
+//    Serial.println(LF.encoderCount);
 }
 
 void lm_encoder_interrupt(void) {

@@ -323,7 +323,6 @@ if __name__ == '__main__':
                             #print(feedback)
                             #print(reqFeedback)
                         else:
-                            print(feedback)
                             if 'WARNING' in feedback:
                                 rospy.logwarn(feedback)
                             else:
