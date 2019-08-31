@@ -314,6 +314,8 @@ if __name__ == '__main__':
                         vBatPub.publish(float(voltage))
                     elif 'GPS' in feedback: #use a better string? longer?
                         publish_nav_states(feedback)
+                    elif 'Desired' in feedback:
+                        pass
                     else:
                         #rospy.loginfo(feedback)
                         if reqInWaiting:
@@ -321,11 +323,9 @@ if __name__ == '__main__':
                             #print(feedback)
                             #print(reqFeedback)
                         else:
+                            print(feedback)
                             if 'WARNING' in feedback:
                                 rospy.logwarn(feedback)
-                            elif 'Desired' in feedback: # a hack because fauzi's code vomits this out
-                                if '0.00 0.00 0.00 0.00 0.00 0.00' in feedback:
-                                    pass
                             else:
                                 feedbackPub.publish(feedback)
                 else:

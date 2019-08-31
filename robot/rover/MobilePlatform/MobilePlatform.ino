@@ -8,12 +8,12 @@
 /* comms */
 #define SERIAL_BAUD 115200
 #define SERIAL_TIMEOUT 20
-#define FEEDBACK_PRINT_INTERVAL 10//50
+#define FEEDBACK_PRINT_INTERVAL 30
 #define LED_BLINK_INTERVAL 1000
 #define SENSOR_READ_INTERVAL 200
 #define SENSOR_TIMEOUT 20
 #define THROTTLE_TIMEOUT 200
-#define MOTOR_CONTROL_INTERVAL 10
+#define MOTOR_CONTROL_INTERVAL 20
 
 /*
   choosing serial vs serial1 should be compile-time: when it's plugged into the pcb,
@@ -202,6 +202,7 @@ void loop() {
 
         }
         else {
+
             print("ASTRO Desired velocities: ");
             print(String(RF.desiredVelocity) + ", ");
             print(String(RM.desiredVelocity) + ", ");
@@ -209,6 +210,7 @@ void loop() {
             print(String(LF.desiredVelocity) + ", ");
             print(String(LM.desiredVelocity) + ", ");
             println(String(LB.desiredVelocity));
+
         }
         sinceFeedbackPrint = 0;
     }
