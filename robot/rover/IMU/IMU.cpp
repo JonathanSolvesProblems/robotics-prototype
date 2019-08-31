@@ -4,8 +4,7 @@
 public functions
 ****************/
 
-IMU::IMU(int gyroAddr, int gyroScale, int accAddr, int accScale)
-  :gyroDeviceAddress(gyroAddr), gyroscopeScale(gyroScale), accDeviceAddress(accAddr), accelerometerScale(accScale)
+IMU::IMU()
 {
   updateTime(0); // initialize time to 0
 }
@@ -105,6 +104,18 @@ void IMU::debugg(){
   
 }
 
+void setAccelerometer(Sensor *sensorPtr){
+  accelerometer = *sensorPtr;
+}
+
+void setGyroscope(Sensor *sensorPtr){
+  gyroscope = *sensorPtr;
+}
+
+void setMagnetometer(Sensor *sensorPtr){
+  magnetometer = *sensorPtr;
+}
+
 /****************
 private functions
 ****************/
@@ -137,9 +148,9 @@ void IMU::calibrateGyro(){
 
   for (int cal_int = 0; cal_int < 2000 ; cal_int++){                  
     if(cal_int % 125 == 0) Serial.print(".");   
-    gyroCalVals[0] += getAttitudeValue(gyroDeviceAddress,0x29,0x28); // x values
-    gyroCalVals[1] += getAttitudeValue(gyroDeviceAddress,0x2B,0x2A); // y values
-    gyroCalVals[2] += getAttitudeValue(gyroDeviceAddress,0x2D,0x2C); // z values
+    gyroCalVals[0] += getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[0],gyroscope.dataRegistersAddresses[1]); // x values MSB, LSB
+    gyroCalVals[1] += getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[2],gyroscope.dataRegistersAddresses[3]); // y values MSB, LSB
+    gyroCalVals[2] += getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[4],gyroscope.dataRegistersAddresses[5]); // z values MSB, LSB
     delay(3);                                                          
   }
   Serial.println();
@@ -184,22 +195,13 @@ int IMU::getAttitudeValue(int deviceAddr, int MSBAddr, int LSBAddr){
 void IMU::updateAccelerometerAttitudeValues(bool calibrate){
   float accVals [3];
 
-  accVals[0] = getAttitudeValue(accDeviceAddress,0x29,0x28); // x values
-  accVals[1] = getAttitudeValue(accDeviceAddress,0x2B,0x2A); // y values
-  accVals[2] = getAttitudeValue(accDeviceAddress,0x2D,0x2C); // z values
+  accVals[0] = getAttitudeValue(accelerometer.address,accelerometer.dataRegistersAddresses[0],accelerometer.dataRegistersAddresses[1]); // x values MSB, LSB
+  accVals[1] = getAttitudeValue(accelerometer.address,accelerometer.dataRegistersAddresses[2],accelerometer.dataRegistersAddresses[3]); // y values MSB, LSB
+  accVals[2] = getAttitudeValue(accelerometer.address,accelerometer.dataRegistersAddresses[4],accelerometer.dataRegistersAddresses[5]); // z values MSB, LSB
 
-  float sensitivity_factor;
-  if(accelerometerScale == 2){
-    sensitivity_factor = 0.061; // in mg/LSB from datasheet
-  } else if(accelerometerScale == 4){
-    sensitivity_factor = 0.122; // in mg/LSB from datasheet
-  } else if(accelerometerScale == 8){
-    sensitivity_factor = 0.244; // in mg/LSB from datasheet
-  }
-
-  accVals[0] = (accVals[0] * sensitivity_factor) / 1000;
-  accVals[1] = (accVals[1] * sensitivity_factor) / 1000;
-  accVals[2] = (accVals[2] * sensitivity_factor) / 1000;
+  accVals[0] = (accVals[0] * accelerometer.sensitivityFactor) / 1000;
+  accVals[1] = (accVals[1] * accelerometer.sensitivityFactor) / 1000;
+  accVals[2] = (accVals[2] * accelerometer.sensitivityFactor) / 1000;
 
   // Calculate angle in radians
   accPitch = atan(accVals[1]/accVals[2]);
@@ -221,28 +223,19 @@ void IMU::updateAccelerometerAttitudeValues(bool calibrate){
 void IMU::updateGyroscopeAttitudeValue(){
   int gyroVals [3];
 
-  gyroVals[0] = getAttitudeValue(gyroDeviceAddress,0x29,0x28); // x values
-  gyroVals[1] = getAttitudeValue(gyroDeviceAddress,0x2B,0x2A); // y values
-  gyroVals[2] = getAttitudeValue(gyroDeviceAddress,0x2D,0x2C); // z values
+  gyroVals[0] = getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[0],gyroscope.dataRegistersAddresses[1]); // x values MSB, LSB
+  gyroVals[1] = getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[2],gyroscope.dataRegistersAddresses[3]); // y values MSB, LSB
+  gyroVals[2] = getAttitudeValue(gyroscope.address,gyroscope.dataRegistersAddresses[4],gyroscope.dataRegistersAddresses[5]); // z values MSB, LSB
 
   // apply calibration offset
   gyroVals[0] -= gyroCalVals[0];
   gyroVals[1] -= gyroCalVals[1];
   gyroVals[2] -= gyroCalVals[2];
-
-  float sensitivity_factor;
-  if(gyroscopeScale == 250){
-    sensitivity_factor = 8.75; // in mdps/LSB from datasheet
-  } else if(gyroscopeScale == 500){
-    sensitivity_factor = 17.5; // in mdps/LSB from datasheet
-  } else if(gyroscopeScale == 2000){
-    sensitivity_factor = 70; // in mdps/LSB from datasheet
-  }
     
     // Gyro values in deg/s
-    gyroVals[0] = (gyroVals[0] * sensitivity_factor) / 1000;
-    gyroVals[1] = (gyroVals[1] * sensitivity_factor) / 1000;
-    gyroVals[2] = (gyroVals[2] * sensitivity_factor) / 1000;
+    gyroVals[0] = (gyroVals[0] * gyroscope.sensitivityFactor) / 1000;
+    gyroVals[1] = (gyroVals[1] * gyroscope.sensitivityFactor) / 1000;
+    gyroVals[2] = (gyroVals[2] * gyroscope.sensitivityFactor) / 1000;
 
   // Gyro dps to deg
   float angle_x_change = gyroVals[0] * dt;

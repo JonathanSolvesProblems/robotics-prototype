@@ -1,12 +1,57 @@
 #include "IMU.h"
+#include "Sensor.h"
 #include <Wire.h>
+#include <vector> // Sensor Class uses vector
 
 // Declare IMU and initialize IMU object
 #define L3GD20_Address 0x6B //I2C address of the L3GD20 gyro
 #define LSM303C_Address 0x1D //I2C address of the LSM303C accelerometer
-#define accelerometerScale 2
-#define gyroscopeScale 250
-IMU myIMU(L3GD20_Address,gyroscopeScale,LSM303C_Address,accelerometerScale);
+
+// Create Sensor objects for IMU sensor devices
+Sensor myAcc(0x1D,"LSM303C_accelerometer",0.061); // initialize device address, name, and sensitivity factor
+Sensor myGyro(0x6B,"L3GD20_gyroscope",8.75); // initialize device address, name, and sensitivity factor
+// Sensor myMagnetometer(); 
+
+// Set up accelerometer
+std::vector<int> accConfRegs = {
+  0x20,0b01000111, // conf reg 1
+  0x21,0b00000000, // conf reg 2
+  0x22,0b00001000, // conf reg 3
+  0x23,0b00000000, // conf reg 4
+  0x24,0b00000000  // conf reg 5
+};
+std::std::vector<int> accDataRegs = {
+  0x29,0x28, // x-axis MSB,LSB
+  0x2B,0x2A, // y-axis MSB,LSB
+  0x2D,0x2C  // z-axis MSB,LSB
+};
+
+// Set up gyroscope
+std::vector<int> gyroConfRegs = {
+  0x20,0b00001111, // conf reg 1
+  0x21,0b00000000, // conf reg 2
+  0x22,0b00001000, // conf reg 3
+  0x23,0b00000000, // conf reg 4
+  0x24,0b00000000  // conf reg 5
+};
+std::std::vector<int> gyroDataRegs = {
+  0x29,0x28, // x-axis MSB,LSB
+  0x2B,0x2A, // y-axis MSB,LSB
+  0x2D,0x2C  // z-axis MSB,LSB
+};
+
+// Initialize sensors' registers
+myAcc.setConfigurationRegisters(&accConfRegs);
+myAcc.setDataRegisters(&accDataRegs);
+myGyro.setConfigurationRegisters(&gyroConfRegs);
+myGyro.setDataRegisters(&gyroDataRegs);
+
+// Instantiate IMU object
+IMU myIMU();
+
+// set IMU devices
+myIMU.setAccelerometer(myAcc);
+myIMU.setGyroscope(myGyro);
 
 float pitch, roll, yaw;
 float dt = 0;
