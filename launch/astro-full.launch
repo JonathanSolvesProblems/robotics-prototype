@@ -1,6 +1,6 @@
 <launch>
 	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"></include>
 	<node pkg="aliencontrol" type="aliencontrol" name="aliencontrol_gui">
-    		<param name="cmd" value="'/home/cedric/Documents/robotics-prototype/robot/basestation/app.py'"/>
+    		<param name="cmd" value="xterm -e python /home/cedric/Documents/robotics-prototype/robot/basestation/app.py"/>
 	</node>
 </launch>

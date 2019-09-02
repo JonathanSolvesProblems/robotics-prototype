@@ -87,9 +87,21 @@ This package contains a publisher to run on the Odroid and a subscriber to be ru
 ## cv_camera
 
 ### Description
-This node is not homemade. It's used to connect to USB cameras and publish their feed to ROS.
+This node relies on a git submodule. It's used to connect to USB cameras and publish their feed to ROS.
 
 ## web_video_server
 
 ### Description
-This node is not homemade. It's used to host camera feeds in a server which can be accessed by a webpage.
+This node relies on a git submodule. It's used to host camera feeds in a server which can be accessed by a webpage.
+
+### Setup
+
+
+## tf2_web_republisher
+
+### Description
+This node relies on a git submodule. It's used for the arm vision.
+
+### Setup
+`sudo apt-get install ros-kinetic-tf2-ros`
+

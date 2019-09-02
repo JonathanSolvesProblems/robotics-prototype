@@ -82,6 +82,16 @@ Finally, to link ROS to our webpage we need to install rosbridge: `sudo apt inst
 Before running the GUI with `./app.py`, you need to run in a separate terminal: `roslaunch rosbridge_server rosbridge_websocket.launch`. Make sure to deactivate the `venv` for this terminal (otherwise it will crash).
 Make sure it works fine: after running the `./app.py` go visit `localhost:5000` in your browser (recommended browser: Google Chrome).
 
+### Compile ROS packages
+At the root of the project folder, install all the required dependencies to build all the packages
+
+`rosdep install --from-paths robot/rospackages/src --ignore-src`
+
+Then build in the `rospackages` directory with 
+
+`cd robot/rospackages`
+`catkin_make` 
+
 ### .bashrc edits
 You should edit your `~/.bashrc` file so that it looks like this:
 
