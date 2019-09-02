@@ -1,10 +1,10 @@
-ROBOTICS_WS="~/Programming/robotics-prototype"
-BASE="$ROBOTICS_WS/robot/basestation"
-ROVER="$ROBOTICS_WS/robot/rover"
-ROSPACKAGES="$ROBOTICS_WS/robot/rospackages"
-BASH_A="~/.bash_aliases"
-NANORC="~/.nanorc"
-CATKIN_WS="$HOME/catkin_ws"
+export ROBOTICS_WS="$HOME/Programming/robotics-prototype"
+export BASE="$ROBOTICS_WS/robot/basestation"
+export ROVER="$ROBOTICS_WS/robot/rover"
+export ROSPACKAGES="$ROBOTICS_WS/robot/rospackages"
+export BASH_A="$HOME/.bash_aliases"
+export NANORC="$HOME/.nanorc"
+export CATKIN_WS="$HOME/catkin_ws"
 
 # general shortcuts
 alias ..="cd .."

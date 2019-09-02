@@ -21,4 +21,4 @@ then
 fi
 echo "Done verifying and installing necessary packages"
 echo "Using '$TERMINAL' to launch commands"
-roslaunch astro-full.launch term:="$TERMINAL"
+roslaunch astro-full.launch term:="$TERMINAL" ws:="$ROBOTICS_WS"

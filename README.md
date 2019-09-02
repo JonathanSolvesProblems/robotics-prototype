@@ -106,6 +106,7 @@ export ROS_MASTER_URI=http://172.16.1.30:11311 # competition mode
 export ROS_HOSTNAME=beep
 . /home/beep/Programming/robotics-prototype/robot/rospackages/devel/setup.bash
 . /home/beep/Programming/robotics-prototype/venv/bin/activate
+. /home/beep/Programming/robotics-prototype/robot/basestation/config/.bash_aliases
 ```
 
 Note that the first 4 lines are there by default when you do the ROS full install,
