@@ -21,6 +21,7 @@ $(document).ready(() => {
               1,
               '#front-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
                 console.log('front camera ON msgs:', msgs)
                 if (msgs[1].includes('Started camera_stream')) {
                   $('img#camera-feed')[0].src =
@@ -41,6 +42,7 @@ $(document).ready(() => {
               0,
               '#front-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
                 console.log('front camera OFF msgs:', msgs)
                 if (msgs[1].includes('Stopped camera_stream')) {
                   // succeeded to close stream
@@ -68,6 +70,7 @@ $(document).ready(() => {
               1,
               '#rear-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
                 console.log('rear camera ON msgs:', msgs)
                 if (msgs[1].includes('Started camera_stream')) {
                   $('img#camera-feed')[0].src =
@@ -87,6 +90,7 @@ $(document).ready(() => {
               0,
               '#rear-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
                 if (msgs[1].includes('Stopped camera_stream')) {
                   console.log('rear camera OFF msgs:', msgs)
 
@@ -132,6 +136,7 @@ $(document).ready(() => {
               1,
               '#arm-science-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
                 console.log('arm/science camera ON msgs:', msgs)
                 if (msgs[1].includes('Started camera_stream')) {
                   $('img#camera-feed')[0].src =
@@ -151,6 +156,8 @@ $(document).ready(() => {
               0,
               '#arm-science-camera-stream-btn',
               function (msgs) {
+                printErrToConsole(msgs)
+
                 if (msgs[1].includes('Stopped camera_stream')) {
                   console.log('arm science camera OFF msgs:', msgs)
 
@@ -363,11 +370,11 @@ $(document).ready(() => {
   // select mux channel using mux_select service
   $('#mux-0').mouseup(function () {
     // Rover
-    if (isListenerOpen()) {
+    if (isListenerOpen() && getCookie('serialType') == 'uart') {
       appendToConsole("Don't change the mux channel while a listener is open!")
     } else {
       requestMuxChannel('#mux-0', function (msgs) {
-        console.log('msgs', msgs)
+        printErrToConsole(msgs)
 
         if (msgs[0] == true && window.location.pathname == '/rover') {
           console.log('Activating Rover Listener Node')
@@ -379,22 +386,25 @@ $(document).ready(() => {
             return
           }
 
-          requestTask(
-            'rover_listener',
-            1,
-            '#toggle-rover-listener-btn',
-            function (msgs) {
-              if (msgs[0]) {
-                $('#toggle-rover-listener-btn')[0].checked = true
-                // try pinging MCU
-                wait(1000)
-                sendRoverRequest('ping', function (msgs) {})
-              } else {
-                $('#toggle-rover-listener-btn')[0].checked = false
-              }
-            },
-            serialType
-          )
+          // automating opening listener and sending MCU ping in UART mode
+          if (serialType == 'uart') {
+              requestTask(
+                'rover_listener',
+                1,
+                '#toggle-rover-listener-btn',
+                function (msgs) {
+                  if (msgs[0]) {
+                    $('#toggle-rover-listener-btn')[0].checked = true
+                    // try pinging MCU
+                    wait(1000)
+                    sendRequest("Rover", 'ping', printErrToConsole)
+                  } else {
+                    $('#toggle-rover-listener-btn')[0].checked = false
+                  }
+                },
+                serialType
+              )
+          }
         }
       })
     }
@@ -402,11 +412,11 @@ $(document).ready(() => {
 
   $('#mux-1').mouseup(function () {
     // Arm
-    if (isListenerOpen()) {
+    if (isListenerOpen() && getCookie('serialType') == 'uart') {
       appendToConsole("Don't change the mux channel while a listener is open!")
     } else {
       requestMuxChannel('#mux-1', function (msgs) {
-        console.log('msgs', msgs)
+        printErrToConsole(msgs)
 
         if (msgs[0] == true && window.location.pathname == '/') {
           console.log('Activating Arm Listener Node')
@@ -418,22 +428,25 @@ $(document).ready(() => {
             return
           }
 
-          requestTask(
-            'arm_listener',
-            1,
-            '#toggle-arm-listener-btn',
-            function (msgs) {
-              if (msgs[0]) {
-                $('#toggle-arm-listener-btn')[0].checked = true
-                // try pinging MCU
-                wait(1000)
-                sendArmRequest('ping', function (msgs) {})
-              } else {
-                $('#toggle-arm-listener-btn')[0].checked = false
-              }
-            },
-            serialType
-          )
+          // automating opening listener and sending MCU ping in UART mode
+          if (serialType == 'uart') {
+              requestTask(
+                'arm_listener',
+                1,
+                '#toggle-arm-listener-btn',
+                function (msgs) {
+                  if (msgs[0]) {
+                    $('#toggle-arm-listener-btn')[0].checked = true
+                    // try pinging MCU
+                    wait(1000)
+                    sendRequest("Arm",'ping', printErrToConsole)
+                  } else {
+                    $('#toggle-arm-listener-btn')[0].checked = false
+                  }
+                },
+                serialType
+              )
+          }
         }
       })
     }
@@ -441,11 +454,11 @@ $(document).ready(() => {
 
   $('#mux-2').mouseup(function () {
     // Science
-    if (isListenerOpen()) {
+    if (isListenerOpen() && getCookie('serialType') == 'uart') {
       appendToConsole("Don't change the mux channel while a listener is open!")
     } else {
       requestMuxChannel('#mux-2', function (msgs) {
-        console.log('msgs', msgs)
+        printErrToConsole(msgs)
 
         if (msgs[0] == true && window.location.pathname == '/science') {
           console.log('Activating Science Listener Node')
@@ -457,22 +470,25 @@ $(document).ready(() => {
             return
           }
 
-          requestTask(
-            'science_listener',
-            1,
-            '#science-listener-btn',
-            function (msgs) {
-              if (msgs[0]) {
-                $('#science-listener-btn')[0].checked = true
-                // try pinging MCU
-                wait(1000)
-                sendScienceRequest('ping', function (msgs) {})
-              } else {
-                $('#science-listener-btn')[0].checked = false
-              }
-            },
-            serialType
-          )
+          // automating opening listener and sending MCU ping in UART mode
+          if (serialType == 'uart') {
+              requestTask(
+                'science_listener',
+                1,
+                '#science-listener-btn',
+                function (msgs) {
+                  if (msgs[0]) {
+                    $('#science-listener-btn')[0].checked = true
+                    // try pinging MCU
+                    wait(1000)
+                    sendRequest("Science", 'ping', printErrToConsole)
+                  } else {
+                    $('#science-listener-btn')[0].checked = false
+                  }
+                },
+                serialType
+              )
+          }
         }
       })
     }
@@ -480,11 +496,11 @@ $(document).ready(() => {
 
   $('#mux-3').mouseup(function () {
     // PDS
-    if (isListenerOpen()) {
+    if (isListenerOpen() && getCookie('serialType') == 'uart') {
       appendToConsole("Don't change the mux channel while a listener is open!")
     } else {
       requestMuxChannel('#mux-3', function (msgs) {
-        console.log('msgs', msgs)
+        printErrToConsole(msgs)
       })
     }
   })
@@ -553,15 +569,21 @@ $(document).ready(() => {
   })
 })
 
+function printErrToConsole(msg)
+{
+  if(!msg[0])
+    appendToConsole(msg[1])
+}
+
 function pingDevice(device) {
   if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
     switch(device)
     {
       case "Arm" :
-        sendArmRequest('ping', function (msgs) {})
+        sendRequest("Arm", 'ping', printErrToConsole)
         break;
       case "Rover" :
-        sendRoverRequest('ping', function (msgs) {})
+        sendRequest("Rover", 'ping', printErrToConsole)
         break;
       case "Odroid":
       default:
@@ -572,7 +594,7 @@ function pingDevice(device) {
   }
 }
 
-function pingOdroid() {
+function pingOdroid(timeoutVal=REQUEST_TIMEOUT) {
   appendToConsole('pinging odroid')
   $.ajax('/ping_rover', {
     success: function (data) {
@@ -583,9 +605,18 @@ function pingOdroid() {
         appendToConsole(data.ros_msg)
       }
     },
-    error: function () {
-      console.log('An error occured')
-    }
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(errorThrown)
+      if (errorThrown=="timeout") {
+         msg = "Odroid ping timeout after " + timeoutVal/1000 + " seconds. " +
+           "Check if the websockets server is running. If not, there's either a network issue " +
+           "or the Odroid and possibly the whole rover has shut down unexpectedly."
+        appendToConsole(msg)
+      } else {
+        console.log('Error of type ' + errorThrown + 'occured')
+      }
+    },
+    timeout: timeoutVal
   })
   lastCmdSent = new Date().getTime()
 }

@@ -66,7 +66,8 @@ $(document).ready(function () {
 
   $('#homing-button').on('click', function (event) {
     event.preventDefault()
-    sendArmCommand('home') // REIMPLEMENT AS AN ACTION
+    //TODO: uncomment this when homing is confirmed to work properly
+    //sendArmCommand('home') // REIMPLEMENT AS AN ACTION
   })
 
   $('#list-all-cmds').on('click', function(event){
@@ -91,7 +92,7 @@ $(document).ready(function () {
 
   $('#toggle-arm-listener-btn').on('click', function (event) {
     event.preventDefault()
-    let serialType = 'uart'
+    let serialType = $('#serial-type').text().trim()
     if (
       $('#serialType')
         .text()
@@ -101,21 +102,17 @@ $(document).ready(function () {
     }
     // click makes it checked during this time, so trying to enable
     else if ($('#toggle-arm-listener-btn').is(':checked')) {
+      // validate UART mode options are correct, let pass if USB mode selected
       if (
-        $('button#mux')
-          .text()
-          .includes('Arm')
+        ($('button#mux').text().includes('Arm') && serialType == 'uart')
+          || serialType == 'usb'
       ) {
-        serialType = $('#serial-type')
-          .text()
-          .trim()
-        console.log('setting serialType:', serialType)
         requestTask(
           'arm_listener',
           1,
           '#toggle-arm-listener-btn',
           function (msgs) {
-            console.log(msgs)
+            printErrToConsole(msgs)
             if (msgs[0]) {
               $('#toggle-arm-listener-btn')[0].checked = true
             } else {
@@ -127,7 +124,7 @@ $(document).ready(function () {
         // console.log('returnVals', returnVals)
       } else {
         appendToConsole(
-          'Cannot turn arm listener on if not in arm mux channel!'
+          'UART MODE: Cannot turn arm listener on if not in arm mux channel!'
         )
       }
     } else {
@@ -135,7 +132,7 @@ $(document).ready(function () {
       requestTask('arm_listener', 0, '#toggle-arm-listener-btn', function (
         msgs
       ) {
-        console.log('msgs[0]', msgs[0])
+        printErrToConsole(msgs)
         if (msgs.length == 2) {
           console.log('msgs[1]', msgs[1])
           if (msgs[1].includes('already running')) {
@@ -162,9 +159,10 @@ $(document).ready(function () {
       parseFloat(multiplier) <= maxMultiplier
     ) {
       let cmd = 'armspeed ' + multiplier
-      sendArmRequest(cmd, function (msgs) {})
+      sendRequest("Arm", cmd, printErrToConsole)
     }
   })
+
   $('#arm-speed-multiplier-input').on('keyup', function (e) {
     if (e.keyCode == 13) {
       // enter key
@@ -175,7 +173,7 @@ $(document).ready(function () {
         parseFloat(multiplier) <= maxMultiplier
       ) {
         let cmd = 'armspeed ' + multiplier
-        sendArmRequest(cmd, function (msgs) {})
+        sendRequest("Arm", cmd, printErrToConsole)
       }
     }
   })
@@ -191,7 +189,7 @@ $(document).ready(function () {
           $(this.id)[0].checked = isOpen
         }
     }
-    sendArmRequest('motor ' + num + ' loop ' + (isOpen) ? 'open' : 'closed', armReq)
+    sendRequest("Arm", 'motor ' + num + ' loop ' + (isOpen) ? 'open' : 'closed', armReq)
   })
 })
 

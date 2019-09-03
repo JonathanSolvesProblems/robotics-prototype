@@ -15,6 +15,10 @@
 #define THROTTLE_TIMEOUT 200
 #define MOTOR_CONTROL_INTERVAL 10
 
+#define SERVO_STOP 93
+#define FRONT_BASE_DEFAULT_PWM 65
+#define REAR_BASE_DEFAULT_PWM 35
+
 /*
   choosing serial vs serial1 should be compile-time: when it's plugged into the pcb,
   the usb port is off-limits as it would cause a short-circuit. Thus only Serial1
@@ -171,7 +175,7 @@ void loop() {
         LF.setVelocity(LF.desiredDirection, fabs(LF.desiredVelocity), LF.getCurrentVelocity());
         LM.setVelocity(LM.desiredDirection, fabs(LM.desiredVelocity), LM.getCurrentVelocity());
         LB.setVelocity(LB.desiredDirection, fabs(LB.desiredVelocity), LB.getCurrentVelocity());
-        
+
         sinceMC = 0;
     }
 
@@ -365,12 +369,14 @@ void serialHandler(void) {
 //! attach the servos to pins
 void attachServos() {
     frontSide.attach(FS_SERVO);
-    frontSide.write(93);
+    frontSide.write(FRONT_BASE_DEFAULT_PWM);
     frontBase.attach(FB_SERVO);
+    frontBase.write(SERVO_STOP);
 
     rearSide.attach(RS_SERVO);
-    frontSide.write(93);
+    rearSide.write(REAR_BASE_DEFAULT_PWM);
     rearBase.attach(RB_SERVO);
+    rearBase.write(SERVO_STOP);
 }
 
 //! Initiate encoder for dcMotor objects and pinModes
