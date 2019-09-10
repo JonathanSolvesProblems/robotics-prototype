@@ -1,7 +1,7 @@
 <launch>
 	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"></include>
 	<node pkg="aliencontrol" type="aliencontrol" name="aliencontrol_gui">
-    		<param name="cmd" value='$(arg term) "python $(arg ws)/robot/basestation/app.py;sleep 5"'/>
+    		<param name="cmd" value='$(arg term) "python $(arg ws)/robot/basestation/app.py"'/>
 	</node>
 <!--	<include file="$(find asimov_simplified)/launch/asimov_full.launch"></include>-->
 </launch>

@@ -18,6 +18,7 @@ then
     echo "aliencontrol not found, installing package aliencontrol"
     git clone https://github.com/acschaefer/aliencontrol "$CATKIN_WS/src/aliencontrol/"
     catkin_make --directory $CATKIN_WS
+    source $CATKIN_WS/devel/setup.sh
 fi
 echo "Done verifying and installing necessary packages"
 echo "Using '$TERMINAL' to launch commands"
