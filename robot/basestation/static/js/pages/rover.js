@@ -243,6 +243,7 @@ $(document).ready(function () {
 })
 
 // rover mcu ping
+/*
 document.addEventListener('keydown', function (event) {
   if (
     event.code === 'KeyP' &&
@@ -253,8 +254,21 @@ document.addEventListener('keydown', function (event) {
     lastCmdSent = new Date().getTime()
   }
 })
+*/
+
+if ( 
+   millisSince(lastCmdSent) > PING_THROTTLE_TIME && 
+   !$('#servo-val').is(':focus')) {
+        Mousetrap.bind('p',function() {
+            console.log('Mousetrap triggered ping')
+            pingDevice('Rover')
+            lastCmdSent = new Date().getTime()
+        }
+        );
+    }
 
 // commands to change speed settings, get buffered serial messages
+/*
 $(document).keydown(function (e) {
   if (!$('#servo-val').is(':focus')) {
     switch (e.which) {
@@ -358,6 +372,8 @@ $(document).keyup(function (e) {
 })
 
 // GAME LOOP CONTROL
+
+*/
 
 var keyState = {}
 window.addEventListener(
