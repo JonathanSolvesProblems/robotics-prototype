@@ -4,6 +4,7 @@ ROVER="$ROBOTICS_WS/robot/rover"
 ROSPACKAGES="$ROBOTICS_WS/robot/rospackages"
 BASH_A="~/.bash_aliases"
 NANORC="~/.nanorc"
+CHANGE_MODE="./change_mode.sh"
 
 # general shortcuts
 alias ..="cd .."
@@ -28,3 +29,7 @@ alias roverenv=". $ROBOTICS_WS/venv/bin/activate"
 alias startgui="updateEnv && roverenv && cd $BASE && python app.py"
 # we have to deactivate venv for this launch file to not break, bug to be resolved eventually
 alias rosgui="roslaunch rosbridge_server rosbridge_websocket.launch"
+
+# switching between local and competition configurations
+alias local="$CHANGE_MODE local"
+alias comp="$CHANGE_MODE comp"
