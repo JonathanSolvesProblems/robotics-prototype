@@ -4,7 +4,7 @@ ROVER="$ROBOTICS_WS/robot/rover"
 ROSPACKAGES="$ROBOTICS_WS/robot/rospackages"
 BASH_A="~/.bash_aliases"
 NANORC="~/.nanorc"
-CHANGE_MODE="./change_mode.sh"
+CHANGE_MODE="$BASE/config/change_mode.sh"
 
 # general shortcuts
 alias ..="cd .."

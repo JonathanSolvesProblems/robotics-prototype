@@ -19,11 +19,19 @@ echo "backing up $bashrc as ${bashrc}_backup"
 cp $bashrc "${bashrc}_backup"
 
 if [[ $1 == "local" ]]; then
+    if ! grep '#export ROS_MASTER_URI=http://local' $bashrc ; then
+        echo "already in local mode"
+        exit 0
+    fi
     echo "switching to local mode"
     sed -i 's/#export ROS_MASTER_URI=http:\/\/local/export ROS_MASTER_URI=http:\/\/local/g' $bashrc
     sed -i 's/export ROS_MASTER_URI=http:\/\/172/#export ROS_MASTER_URI=http:\/\/172/g' $bashrc
     source $bashrc
 elif [[ $1 == "comp" ]]; then
+    if ! grep '#export ROS_MASTER_URI=http://172' $bashrc ; then
+        echo "already in comp mode"
+        exit 0
+    fi
     echo "switching to comp mode"
     sed -i 's/export ROS_MASTER_URI=http:\/\/local/#export ROS_MASTER_URI=http:\/\/local/g' $bashrc
     sed -i 's/#export ROS_MASTER_URI=http:\/\/172/export ROS_MASTER_URI=http:\/\/172/g' $bashrc
