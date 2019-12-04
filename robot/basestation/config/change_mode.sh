@@ -24,7 +24,7 @@ else
     fi
 fi
 
-local_line="export ROS_MASTER_URI=http:\/\/localhost"
+local_line="export ROS_MASTER_URI=http:\/\/local"
 comp_line="export ROS_MASTER_URI=http:\/\/172"
 
 echo "backing up $bashrc as ${bashrc}_backup"
@@ -36,8 +36,8 @@ if [[ $1 == "local" ]]; then
         exit 0
     fi
     echo "switching to local mode"
-    sed -i 's/#export ROS_MASTER_URI=http:\/\/local/export ROS_MASTER_URI=http:\/\/local/g' $bashrc
-    sed -i 's/export ROS_MASTER_URI=http:\/\/172/#export ROS_MASTER_URI=http:\/\/172/g' $bashrc
+    sed -i "s/#$local_line/$local_line/g" $bashrc
+    sed -i "s/$comp_line/#$comp_line/g" $bashrc
     source $bashrc
 elif [[ $1 == "comp" ]]; then
     if ! grep '#export ROS_MASTER_URI=http://172' $bashrc ; then
@@ -45,8 +45,8 @@ elif [[ $1 == "comp" ]]; then
         exit 0
     fi
     echo "switching to comp mode"
-    sed -i 's/export ROS_MASTER_URI=http:\/\/local/#export ROS_MASTER_URI=http:\/\/local/g' $bashrc
-    sed -i 's/#export ROS_MASTER_URI=http:\/\/172/export ROS_MASTER_URI=http:\/\/172/g' $bashrc
+    sed -i "s/$local_line/#$local_line/g" $bashrc
+    sed -i "s/#$comp_line/$comp_line/g" $bashrc
     source $bashrc
 else
     if [ -z "$1" ]; then
