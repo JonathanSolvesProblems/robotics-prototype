@@ -36,9 +36,10 @@ alias nani=". $NANORC"
 alias updateEnv="sh $BASE/env.sh > $BASE/static/js/env.js"
 alias roverenv=". $ROBOTICS_WS/venv/bin/activate"
 alias startgui="updateEnv && roverenv && cd $BASE && python app.py"
-# we have to deactivate venv for this launch file to not break, bug to be resolved eventually
-alias rosgui="roslaunch rosbridge_server rosbridge_websocket.launch"
 
 # switching between local and competition configurations
 alias loc="$CHANGE_MODE local"
 alias comp="$CHANGE_MODE comp"
+
+# we have to deactivate venv for this launch file to not break, bug to be resolved eventually
+alias rosgui="roverenv && deactivate && roslaunch rosbridge_server rosbridge_websocket.launch"
