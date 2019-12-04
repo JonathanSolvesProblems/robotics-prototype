@@ -11,7 +11,19 @@ set -i
 # and remove repetitive code of updating
 #@TODO: add switching of ROS_HOSTNAME var
 #@TODO: account for possibly multiple '#'s
-bashrc="$HOME/.bashrc"
+
+if [ -z "$2" ]; then
+    bashrc="$HOME/.bashrc"
+else
+    # check if file exists
+    if [ -f "$2" ]; then
+        bashrc="$2"
+    else
+        echo "File $2 does not exist - exiting script"
+        exit 1
+    fi
+fi
+
 local_line="export ROS_MASTER_URI=http:\/\/localhost"
 comp_line="export ROS_MASTER_URI=http:\/\/172"
 
@@ -37,7 +49,12 @@ elif [[ $1 == "comp" ]]; then
     sed -i 's/#export ROS_MASTER_URI=http:\/\/172/export ROS_MASTER_URI=http:\/\/172/g' $bashrc
     source $bashrc
 else
-    echo "no arguments, please supply 'local' or 'comp' to indicate which mode you want to change to"
+    if [ -z "$1" ]; then
+        echo "No args passed"
+    else
+        echo "Args not recognized"
+    fi
+    echo "Please supply 'local' or 'comp' as the first arg to indicate which mode you want to change to"
 fi
 
 echo "ROS_MASTER_URI: $ROS_MASTER_URI"
