@@ -1,4 +1,20 @@
 $(document).ready(() => {
+  
+  let ros_logs_subscriber = new ROSLIB.Topic({
+    ros: ros,
+    name: 'rosout',
+    messageType: 'rosgraph_msgs/Log'
+  })
+  
+  ros_logs_subscriber.subscribe(function(message){
+    let log_level = message.level;
+    let log_msg = message.msg;
+    let log_file = message.file;
+    let log_line = message.line;
+    let log_function = message.function;
+    console.log("[" + log_file + ":" + log_line + "][" + log_level + "]" + log_msg)
+  })
+
   function pingDevice (device) {
     if (millisSince(lastCmdSent) > PING_THROTTLE_TIME) {
       switch (device) {
