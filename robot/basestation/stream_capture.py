@@ -62,4 +62,4 @@ def start_ffmpeg_record(stream, stream_url, formatted_date):
     save_video_dir = 'rover_stream/' + stream
     subprocess.Popen(['mkdir rover_stream'], shell=True)
     subprocess.Popen(['mkdir ' + save_video_dir], shell=True)
-    proc_video[stream] = subprocess.Popen(['ffmpeg -i ' + stream_url + ' -acodec copy -vcodec copy ' + save_video_dir + '/' + filename + '.mp4'], stdin=PIPE, shell=True)
+    proc_video[stream] = subprocess.Popen(['ffmpeg -i ' + stream_url + ' -use_wallclock_as_timestamps 1 -acodec copy -vcodec copy ' + save_video_dir + '/' + filename + '.mp4'], stdin=PIPE, shell=True)
