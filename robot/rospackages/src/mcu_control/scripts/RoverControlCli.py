@@ -8,6 +8,7 @@ import time
 import os
 import subprocess
 import re
+from RoverCommander import RoverCommander
 
 # returns current time in milliseconds
 currentMillis = lambda: int(round(time.time() * 1000))
@@ -56,6 +57,8 @@ lastCmdSent = 0
 THROTTLE_TIME = 100
 
 setX(TARGET_DELAY, TARGET_REFRESH)
+rover_commander = RoverCommander()
+
 print("Ready for sending drive commands!\n")
 
 while True:
@@ -65,25 +68,44 @@ while True:
         if currentMillis() - lastCmdSent > THROTTLE_TIME:
             # for debugging
             #print("waited {} milliseconds to move".format(currentMillis() - lastCmdSent))
-            if key == 'w':
+            if key == 'w': # FORWARD
+                print('FORWARD')
                 print("Sending key: " + key)
-
+                rover_commander.budge_forward()
                 lastCmdSent = currentMillis()
             elif key == 'a':
                 print("Sending key: " + key)
-
                 lastCmdSent = currentMillis()
             elif key == 's':
                 print("Sending key: " + key)
-
                 lastCmdSent = currentMillis()
             elif key == 'd':
                 print("Sending key: " + key)
-                #mySocket.sendto(str.encode(key), (SERVER_IP, PORT_NUMBER))
                 lastCmdSent = currentMillis()
-            elif key == 't': # toggle activate/deactivate
+            elif key == ' ': # STOP
+                print('STOP')
                 print("Sending key: " + key)
-                #mySocket.sendto(str.encode(key), (SERVER_IP, PORT_NUMBER))
+                rover_commander.stop()
+                lastCmdSent = currentMillis()
+            elif key == 'o': # REQUEST OPEN LOOP
+                print('OPEN LOOP')
+                print("Sending key: " + key)
+                rover_commander.client_request('open-loop')
+                lastCmdSent = currentMillis()
+            elif key == 'c': # REQUEST CLOSED LOOP
+                print('CLOSED LOOP')
+                print("Sending key: " + key)
+                rover_commander.client_request('close-loop')
+                lastCmdSent = currentMillis()
+            elif key == '1': # activate rover MCU
+                print('ACTIVATE')
+                print("Sending key: " + key)
+                rover_commander.activate()
+                lastCmdSent = currentMillis()
+            elif key == '0': # deactivate rover MCU
+                print('DEACTIVATE')
+                print("Sending key: " + key)
+                rover_commander.deactivate()
                 lastCmdSent = currentMillis()
             elif key == 'q':
 
