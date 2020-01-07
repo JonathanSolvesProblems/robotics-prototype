@@ -44,7 +44,7 @@ class RoverCommander:
         rospy.loginfo('Activating rover')
         response = self.client_request('activate')
         return response
-    
+
     def deactivate(self):
         '''
         sends deactivate request to rover
@@ -53,11 +53,36 @@ class RoverCommander:
         response = self.client_request('deactivate')
         return response
 
+    def budge(self, cmd):
+        '''
+        sends budge command to rover
+        '''
+        self.command_publisher.publish(cmd)
+
     def budge_forward(self):
         '''
         sends forward command to rover
         '''
-        self.command_publisher.publish('5:' + str(RoverCommander.MIN_SPEED))
+        self.budge('5:' + str(RoverCommander.MIN_SPEED))
+
+    def budge_backward(self):
+        '''
+        sends backward command to rover
+        '''
+        self.budge('-5:' + str(RoverCommander.MIN_SPEED))
+
+
+    def rotate_left(self):
+        '''
+        sends rotate left command to rover
+        '''
+        self.budge('5:-' + str(RoverCommander.MAX_SPEED))
+
+    def rotate_right(self):
+        '''
+        sends rotate right command to rover
+        '''
+        self.budge('5:' + str(RoverCommander.MAX_SPEED))
 
     def stop(self):
         '''

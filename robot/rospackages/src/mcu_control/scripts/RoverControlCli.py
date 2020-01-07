@@ -68,43 +68,49 @@ while True:
         if currentMillis() - lastCmdSent > THROTTLE_TIME:
             # for debugging
             #print("waited {} milliseconds to move".format(currentMillis() - lastCmdSent))
-            if key == 'w': # FORWARD
-                print('FORWARD')
+            if key == 'w':
                 print("Sending key: " + key)
+                print('BUDGE FORWARD')
                 rover_commander.budge_forward()
                 lastCmdSent = currentMillis()
             elif key == 'a':
                 print("Sending key: " + key)
+                print('ROTATE LEFT')
+                rover_commander.rotate_left()
                 lastCmdSent = currentMillis()
             elif key == 's':
                 print("Sending key: " + key)
+                print('BUDGE BACKWARD')
+                rover_commander.budge_backward()
                 lastCmdSent = currentMillis()
             elif key == 'd':
                 print("Sending key: " + key)
+                print('ROTATE RIGHT')
+                rover_commander.rotate_right()
                 lastCmdSent = currentMillis()
-            elif key == ' ': # STOP
-                print('STOP')
+            elif key == ' ':
                 print("Sending key: " + key)
+                print('STOP')
                 rover_commander.stop()
                 lastCmdSent = currentMillis()
-            elif key == 'o': # REQUEST OPEN LOOP
-                print('OPEN LOOP')
+            elif key == 'o':
                 print("Sending key: " + key)
+                print('OPEN LOOP')
                 rover_commander.client_request('open-loop')
                 lastCmdSent = currentMillis()
-            elif key == 'c': # REQUEST CLOSED LOOP
-                print('CLOSED LOOP')
+            elif key == 'c':
                 print("Sending key: " + key)
+                print('CLOSED LOOP')
                 rover_commander.client_request('close-loop')
                 lastCmdSent = currentMillis()
             elif key == '1': # activate rover MCU
-                print('ACTIVATE')
                 print("Sending key: " + key)
+                print('ACTIVATE')
                 rover_commander.activate()
                 lastCmdSent = currentMillis()
             elif key == '0': # deactivate rover MCU
-                print('DEACTIVATE')
                 print("Sending key: " + key)
+                print('DEACTIVATE')
                 rover_commander.deactivate()
                 lastCmdSent = currentMillis()
             elif key == 'q':
