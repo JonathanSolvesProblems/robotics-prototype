@@ -12,6 +12,13 @@ class RoverCommander:
     MAX_SPEED = 45
     STOP = str(MIN_SPEED) + ':' + str(MIN_SPEED)
 
+    @staticmethod
+    def is_valid_percent(percent):
+        '''
+        return True if value given between 0 and 100 inclusive
+        '''
+        return percent >= 0 and percent <= 100
+
     def __init__(self):
         rospy.loginfo('Initializing anonymous node: ' + RoverCommander.NODE_NAME)
         rospy.init_node(RoverCommander.NODE_NAME, anonymous=True)
@@ -40,7 +47,6 @@ class RoverCommander:
         '''
         sends activate request to rover
         '''
-
         rospy.loginfo('Activating rover')
         response = self.client_request('activate')
         return response
@@ -59,30 +65,59 @@ class RoverCommander:
         '''
         self.command_publisher.publish(cmd)
 
-    def budge_forward(self):
+    # main drive commands
+    def budge_forward(self, percent):
         '''
         sends forward command to rover
         '''
-        self.budge('5:' + str(RoverCommander.MIN_SPEED))
+        if not self.is_valid_percent(percent):
+            raise Exception('invalid percent value given, must be integer between 0-100')
+            return False
 
-    def budge_backward(self):
+        throttle = RoverCommander.MIN_SPEED
+        speed = RoverCommander.MAX_SPEED * percent/100
+
+        self.budge(str(speed) + ':' + str(throttle))
+
+    def budge_backward(self, percent):
         '''
         sends backward command to rover
         '''
-        self.budge('-5:' + str(RoverCommander.MIN_SPEED))
+        if not self.is_valid_percent(percent):
+            raise Exception('invalid percent value given, must be integer between 0-100')
+            return False
+
+        throttle = RoverCommander.MIN_SPEED
+        speed = RoverCommander.MAX_SPEED * percent/100 * -1
+
+        self.budge(str(speed) + ':' + str(throttle))
 
 
-    def rotate_left(self):
+    def rotate_left(self, percent):
         '''
         sends rotate left command to rover
         '''
-        self.budge('5:-' + str(RoverCommander.MAX_SPEED))
+        if not self.is_valid_percent(percent):
+            raise Exception('invalid percent value given, must be integer between 0-100')
+            return False
 
-    def rotate_right(self):
+        throttle = RoverCommander.MAX_SPEED * -1
+        speed = RoverCommander.MAX_SPEED * percent/100
+    
+        self.budge(str(speed) + ':' + str(throttle))
+
+    def rotate_right(self, percent):
         '''
         sends rotate right command to rover
         '''
-        self.budge('5:' + str(RoverCommander.MAX_SPEED))
+        if not self.is_valid_percent(percent):
+            raise Exception('invalid percent value given, must be integer between 0-100')
+            return False
+
+        throttle = RoverCommander.MAX_SPEED
+        speed = RoverCommander.MAX_SPEED * percent/100
+
+        self.budge(str(speed) + ':' + str(throttle))
 
     def stop(self):
         '''

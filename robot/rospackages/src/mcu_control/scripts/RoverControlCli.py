@@ -58,6 +58,7 @@ THROTTLE_TIME = 100
 
 setX(TARGET_DELAY, TARGET_REFRESH)
 rover_commander = RoverCommander()
+speed_percent = 50 # set to half max speed by default
 
 print("Ready for sending drive commands!\n")
 
@@ -71,22 +72,22 @@ while True:
             if key == 'w':
                 print("Sending key: " + key)
                 print('BUDGE FORWARD')
-                rover_commander.budge_forward()
+                rover_commander.budge_forward(speed_percent)
                 lastCmdSent = currentMillis()
             elif key == 'a':
                 print("Sending key: " + key)
                 print('ROTATE LEFT')
-                rover_commander.rotate_left()
+                rover_commander.rotate_left(speed_percent)
                 lastCmdSent = currentMillis()
             elif key == 's':
                 print("Sending key: " + key)
                 print('BUDGE BACKWARD')
-                rover_commander.budge_backward()
+                rover_commander.budge_backward(speed_percent)
                 lastCmdSent = currentMillis()
             elif key == 'd':
                 print("Sending key: " + key)
                 print('ROTATE RIGHT')
-                rover_commander.rotate_right()
+                rover_commander.rotate_right(speed_percent)
                 lastCmdSent = currentMillis()
             elif key == ' ':
                 print("Sending key: " + key)
@@ -113,6 +114,13 @@ while True:
                 print('DEACTIVATE')
                 rover_commander.deactivate()
                 lastCmdSent = currentMillis()
+            elif key == 'p':
+                print('CHANGE PERCENT SPEED')
+                print('Currently set to: ', speed_percent)
+                new_speed = input('Change speed percent to: ')
+                if RoverCommander.is_valid_percent(int(new_speed)):
+                    print('Setting current speed to: ', new_speed)
+                    speed_percent = int(new_speed)
             elif key == 'q':
 
                 print("\nTerminating connection.")
