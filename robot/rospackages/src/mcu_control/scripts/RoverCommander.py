@@ -11,7 +11,8 @@ class RoverCommander:
     MIN_SPEED = 0
     MAX_SPEED = 45
     STOP = str(MIN_SPEED) + ':' + str(MIN_SPEED)
-
+    
+    # utility functions
     @staticmethod
     def is_valid_percent(percent):
         '''
@@ -19,6 +20,7 @@ class RoverCommander:
         '''
         return percent >= 0 and percent <= 100
 
+    # class related functions
     def __init__(self):
         rospy.loginfo('Initializing anonymous node: ' + RoverCommander.NODE_NAME)
         rospy.init_node(RoverCommander.NODE_NAME, anonymous=True)
@@ -29,6 +31,7 @@ class RoverCommander:
         rospy.loginfo('Creating service proxy for service: ' + RoverCommander.REQUEST_SERVICE)
         self.request_proxy = rospy.ServiceProxy(RoverCommander.REQUEST_SERVICE, ArmRequest)
 
+    # lowest level functions - interface
     def client_request(self, request):
         '''
         sends given request to rover
@@ -43,6 +46,13 @@ class RoverCommander:
 
         return response
 
+    def budge(self, cmd):
+        '''
+        sends budge command to rover
+        '''
+        self.command_publisher.publish(cmd)
+
+    # wrappers using lowest level functions - implementation
     def activate(self):
         '''
         sends activate request to rover
@@ -59,13 +69,9 @@ class RoverCommander:
         response = self.client_request('deactivate')
         return response
 
-    def budge(self, cmd):
-        '''
-        sends budge command to rover
-        '''
-        self.command_publisher.publish(cmd)
-
-    # main drive commands
+    # main drive commands (without ramp up/down)
+    # the interval at which the rover MCU currently checks for serial commands is 10ms
+    # a single budge will therefore only drive the motors for 10 ms
     def budge_forward(self, percent):
         '''
         sends forward command to rover
@@ -124,6 +130,3 @@ class RoverCommander:
         sends stop command to rover
         '''
         self.command_publisher.publish(RoverCommander.STOP)
-                        
-if __name__ == '__main__':
-    rover_commander = RoverCommander()
