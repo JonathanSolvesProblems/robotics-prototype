@@ -10,6 +10,7 @@ class RoverCommander:
     NODE_NAME = 'rover_command_publisher'
     MIN_SPEED = 0
     MAX_SPEED = 45
+    DEFAULT_SPEED = 40 # in percent
     STOP = str(MIN_SPEED) + ':' + str(MIN_SPEED)
     
     # utility functions
@@ -72,7 +73,7 @@ class RoverCommander:
     # main drive commands (without ramp up/down)
     # the interval at which the rover MCU currently checks for serial commands is 10ms
     # a single budge will therefore only drive the motors for 10 ms
-    def budge_forward(self, percent):
+    def budge_forward(self, percent=self.DEFAULT_SPEED):
         '''
         sends forward command to rover
         '''
@@ -85,11 +86,11 @@ class RoverCommander:
 
         self.budge(str(speed) + ':' + str(throttle))
 
-    def budge_backward(self, percent):
+    def budge_backward(self, percent=self.DEFAULT_SPEED):
         '''
         sends backward command to rover
         '''
-        if not self.is_valid_percent(percent):
+        if not self.is_valid_percent(percent=self.DEFAULT_SPEED):
             raise Exception('invalid percent value given, must be integer between 0-100')
             return False
 
@@ -99,7 +100,7 @@ class RoverCommander:
         self.budge(str(speed) + ':' + str(throttle))
 
 
-    def rotate_left(self, percent):
+    def rotate_left(self, percent=self.DEFAULT_SPEED):
         '''
         sends rotate left command to rover
         '''
@@ -112,7 +113,7 @@ class RoverCommander:
     
         self.budge(str(speed) + ':' + str(throttle))
 
-    def rotate_right(self, percent):
+    def rotate_right(self, percent=self.DEFAULT_SPEED):
         '''
         sends rotate right command to rover
         '''
