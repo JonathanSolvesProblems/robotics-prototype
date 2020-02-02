@@ -6,8 +6,8 @@ import flask
 from flask import jsonify, make_response
 import threading
 
-import robot.basestation.ros_utils as ros_utils
-from robot.basestation.ros_utils import fetch_ros_master_ip
+import robot.basestation.static.python.ros_utils as ros_utils
+from robot.basestation.static.python.ros_utils import *
 
 global proc_video
 proc_video = {}
@@ -63,3 +63,29 @@ def start_ffmpeg_record(stream, stream_url, formatted_date):
     subprocess.Popen(['mkdir rover_stream'], shell=True)
     subprocess.Popen(['mkdir ' + save_video_dir], shell=True)
     proc_video[stream] = subprocess.Popen(['ffmpeg -i ' + stream_url + ' -acodec copy -vcodec copy ' + save_video_dir + '/' + filename + '.mp4'], stdin=PIPE, shell=True)
+
+def run_capture_image():
+    stream_url = "http://" + fetch_ros_master_ip() + ":8080/stream?topic=/cv_camera/image_raw"
+    #lserror, lsoutput = run_shell("ls -1q img* | wc -l")
+    # p1 = subprocess.Popen(split("ls -1q img*"), stdout=subprocess.PIPE)
+    # p2 = subprocess.Popen(split("wc -l"), stdin=p1.stdout)
+    # output, error = p2.communicate()
+    output, error = run_shell('ls')
+    output = output.decode()
+    print('output:', output)
+    i = 0
+
+    if 'img' in output:
+        i = output.rfind('img')
+        i = int(output[i + 3]) + 1 # shift by 'img'
+        print('i', i)
+
+    error, output = run_shell("ffmpeg -i " + stream_url + " -ss 00:00:01.500 -f image2 -vframes 1 img" + str(i) + ".jpg")
+    msg = "success"
+
+    if error:
+        msg = "F"
+
+    print('msg', msg)
+
+    return (msg)

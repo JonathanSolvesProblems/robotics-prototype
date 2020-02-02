@@ -5,60 +5,19 @@ Flask is light-weight and modular so this is actually all we need to set up a si
 """
 
 import os
-import subprocess
-from subprocess import Popen, PIPE
 from urllib.parse import unquote
 import flask
 from flask import jsonify, request
-from robot.comms.connection import Connection
 import time
 import datetime
 from shlex import split
 
-import robot.basestation.stream_capture as stream_capture
-from robot.basestation.stream_capture import start_recording_feed, stop_recording_feed
-import robot.basestation.ros_utils as ros_utils
-from robot.basestation.ros_utils import fetch_ros_master_uri, fetch_ros_master_ip
+import robot.basestation.static.python.stream_capture as stream_capture
+from robot.basestation.static.python.stream_capture import *
+import robot.basestation.static.python.ros_utils as ros_utils
+from robot.basestation.static.python.ros_utils import *
 
 app = flask.Flask(__name__)
-
-def run_shell(cmd, args="", print_output=True):
-    """Run script command supplied as string.
-
-    Returns tuple of output and error.
-    """
-    cmd_list = cmd.split()
-    arg_list = args.split()
-
-    for arg in arg_list:
-        cmd_list.append(str(arg))
-
-    if print_output:
-        print("arg_list:", arg_list)
-        print("cmd_list:", cmd_list)
-
-    process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE)
-    output, error = process.communicate()
-
-    return output, error
-
-def get_pid(keyword):
-    cmd = "ps aux"
-    output, error = run_shell(cmd)
-
-    ting = output.decode().split('\n')
-
-    #print(ting)
-
-    for line in ting:
-        if keyword in line:
-            #print("FOUND PID:", line)
-            words = line.split()
-            print("PID:", words[1])
-
-            return words[1]
-
-    return -1
 
 # Once we launch this, this will route us to the "/" page or index page and
 # automatically render the Robot GUI
@@ -100,137 +59,27 @@ def initialSection():
 
 @app.route("/ping_rover")
 def ping_rover():
-    """Pings ROS_MASTER_URI and return response object with resulting outputs.
-
-    Pings rover first directly with Unix ping command,
-    then using ros ping_acknowledgment service.
-
-    Returns JSON object with the following fields:
-    success -- whether requests was successful
-    ping_msg -- output of Unix ping command
-    ros_msg -- output of the ROS ping_acknowledgment service
-    """
-    ping_output, error = run_shell("ping -c 1 " + fetch_ros_master_ip())
-    ping_output = ping_output.decode()
-
-    print("Output: " + ping_output)
-
-    if "Destination Net Unreachable" in ping_output:
-        error_msg = "Basestation has no connection to network, aborting ROS ping."
-        return jsonify(success=False, ping_msg=ping_output, ros_msg=error_msg)
-
-    if "Destination Host Unreachable" in ping_output:
-        error_msg = "Rover has no connection to network, aborting ROS ping."
-        return jsonify(success=False, ping_msg=ping_output, ros_msg=error_msg)
-
-    if error:
-        print("Error: " + error.decode())
-
-    ros_output, error = run_shell("rosrun ping_acknowledgment ping_response_client.py hello")
-    ros_output = ros_output.decode()
-
-    print("Pinging rover")
-    print("Output: " + ros_output)
-
-    if error:
-        print("Error: " + error.decode())
-
-    return jsonify(success=True, ping_msg=ping_output, ros_msg=ros_output)
+    success, ping_msg, ros_msg = run_ping_rover()
+    return jsonify(success=success, ping_msg=ping_msg, ros_msg=ros_msg)
 
 
 # only to be used when hacky implementation is fixed
 # see odroid_rx package for details
 @app.route("/odroid_rx", methods=["POST"])
 def odroid_rx():
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    log_file = script_dir + "/../rospackages/src/odroid_rx/scripts/odroid_rx.txt"
-    print("odroid_rx")
-
-    # query the topic exactly once
-    output, error = run_shell("cat", log_file)
-    output = str(output, "utf-8")
-
-    print("output: " + output)
-
-    return jsonify(success=True, odroid_rx=output)
+    success, odroid_rx = run_odroid_rx()
+    return jsonify(success=success, odroid_rx=odroid_rx)
 
 # Rover controls
 @app.route("/rover_drive", methods=["POST"])
 def rover_drive():
-    print("rover_drive")
-
-    cmd = str(request.get_data('cmd'), "utf-8")
-    print("cmd: " + cmd)
-    # remove fluff, only command remains
-    if cmd:
-        cmd = cmd.split("=")[1]
-        # decode URI
-        cmd = unquote(cmd)
-
-    if local:
-        rover_ip = "127.0.0.1"
-        base_ip = rover_ip
-        rover_port = 5020
-        base_port = 5025
-    else:
-        rover_ip = "172.16.1.30"
-        base_ip = "172.16.1.20"
-        rover_port = 5030
-        base_port = rover_port
-    print("cmd: " + cmd)
-    sender = Connection("rover_drive_sender", rover_ip, rover_port)
-
-    error = str(None)
-
-    try:
-        sender.send(cmd)
-    except OSError:
-        error = "Network is unreachable"
-        print(error)
-
-    receiver = Connection("rover_drive_receiver", base_ip, base_port)
-    feedback = str(None)
-    error = str(None)
-
-    try:
-        feedback = receiver.receive(timeout=2)
-    except OSError:
-        error = "Network error"
-        print(error)
-
-    print("feedback:", feedback)
-
-    if not feedback:
-        feedback = "Timeout limit exceeded, no data received"
-
-    return jsonify(success=True, cmd=cmd, feedback=feedback, error=error)
+    success, cmd, feedback, error = run_rover_drive()
+    return jsonify(success=success, cmd=cmd, feedback=feedback, error=error)
 
 # capture image
 @app.route("/capture_image", methods=["POST", "GET"])
 def capture_image():
-    stream_url = "http://" + fetch_ros_master_ip() + ":8080/stream?topic=/cv_camera/image_raw"
-    #lserror, lsoutput = run_shell("ls -1q img* | wc -l")
-    # p1 = subprocess.Popen(split("ls -1q img*"), stdout=subprocess.PIPE)
-    # p2 = subprocess.Popen(split("wc -l"), stdin=p1.stdout)
-    # output, error = p2.communicate()
-    output, error = run_shell('ls')
-    output = output.decode()
-    print('output:', output)
-    i = 0
-
-    if 'img' in output:
-        i = output.rfind('img')
-        i = int(output[i + 3]) + 1 # shift by 'img'
-        print('i', i)
-
-    error, output = run_shell("ffmpeg -i " + stream_url + " -ss 00:00:01.500 -f image2 -vframes 1 img" + str(i) + ".jpg")
-    msg = "success"
-
-    if error:
-        msg = "F"
-
-    print('msg', msg)
-
+    msg = run_capture_image()
     return jsonify(msg=msg)
 
 @app.route("/initiate_feed_recording/<stream>", methods=["POST", "GET"])
