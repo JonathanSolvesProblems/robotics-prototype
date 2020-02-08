@@ -109,19 +109,18 @@ $(document).ready(() => {
   })
 
   $('#save-image').on('click', function (event) {
-    $.ajax('/capture_image', {
-      success: function (data) {
-        appendToConsole(data.msg)
+    axios.get('/capture_image')
+      .then(({data}) => {
+        appendToConsole(data.msg);
         if (!data.msg.includes('success')) {
-          appendToConsole('Something went wrong, got', data.msg)
+          appendToConsole('Something went wrong, got', data.msg);
         } else {
-          appendToConsole(data.msg)
+          appendToConsole(data.msg);
         }
-      },
-      error: function () {
-        console.log('An error occured')
-      }
-    })
+      })
+      .catch(() => {
+        console.log('An error occured');
+      })
   })
 
   $('#arm-science-camera-stream-btn').on('click', function (event) {
