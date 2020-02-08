@@ -224,31 +224,27 @@ function pingDevice (device) {
 }
 
 function pingOdroid (timeoutVal = REQUEST_TIMEOUT) {
-  appendToConsole('pinging odroid')
-  $.ajax('/ping_rover', {
-    success: function (data) {
+  appendToConsole('pinging odroid')                                         
+  axios.get('/ping_rover', {timeout: timeoutVal})
+    .then(({data}) => { // Used object destructuring to extract "data" from the response
       appendToConsole(data.ping_msg)
       if (!data.ros_msg.includes('Response')) {
         appendToConsole('No response from ROS ping_acknowledgment service')
       } else {
         appendToConsole(data.ros_msg)
       }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.log(errorThrown)
-      if (errorThrown == 'timeout') {
+    })
+    .catch(({message}) => { // Used object destructuring to extract "message" from the error
+      if (message.includes('timeout')) {
         msg =
-          'Odroid ping timeout after ' +
-          timeoutVal / 1000 +
-          ' seconds. ' +
-          "Check if the websockets server is running. If not, there's either a network issue " +
-          'or the Odroid and possibly the whole rover has shut down unexpectedly.'
+          `Odroid ping timeout after ${timeoutVal / 1000} seconds. ` +
+          `Check if the websockets server is running. If not, there's either ` +
+          `a network issue or the Odroid and possibly the whole rover has shut down unexpectedly.`
         appendToConsole(msg)
       } else {
-        console.log('Error of type ' + errorThrown + 'occured')
+        appendToConsole(`An unexpected error occured: ${message}`)
       }
-    },
-    timeout: timeoutVal
-  })
+    });
+
   lastCmdSent = new Date().getTime()
 }
