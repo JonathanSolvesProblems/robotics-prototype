@@ -540,10 +540,10 @@ void initEncoders(void) {
   attachInterrupt(motor4.encoderPinB, m4_encoder_interrupt, CHANGE);
 
   // set activate PIDs
-  motor1.isOpenLoop = false; motor1.encoderModifier=-1;
+  motor1.isOpenLoop = false; //motor1.encoderModifier=-1;
   motor2.isOpenLoop = false;
   motor3.isOpenLoop = false;
-  motor4.isOpenLoop = false; motor4.encoderModifier=-1;
+  motor4.isOpenLoop = false; //motor4.encoderModifier=-1;
 
   // set pid gains
   motor1.pidController.setGainConstants(10.0, 0.0, 0.0);
@@ -609,7 +609,7 @@ void initSpeedParams(void) {
   UART_PORT.println("ARM Setting motor speeds and open loop gains.");
 #endif
 
-  motor1.setMotorSpeed(50); // 60 rpm
+  motor1.setMotorSpeed(80); // 60 rpm
   motor2.setMotorSpeed(42); // 32 rpm
   motor3.setMotorSpeed(65); // 45 rpm
   motor4.setMotorSpeed(30); // 60 rpm
