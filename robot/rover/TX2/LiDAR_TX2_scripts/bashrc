@@ -1,0 +1,5 @@
+#LiDAR setup
+source ~/Desktop/myworkspace/devel/setup.bash
+alias connectlidar='bash ~/Programming/robotics-prototype/robot/rover/TX2/LiDAR_TX2_scripts/lidarConnect.sh'
+alias roslidar='bash ~/Programming/robotics-prototype/robot/TX2/LiDAR_TX2_scripts/roslidar.sh'"$1"
+
