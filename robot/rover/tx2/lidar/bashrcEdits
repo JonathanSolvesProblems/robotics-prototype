@@ -1,0 +1,6 @@
+#Copy and paste the text below into the .basrc file on the TX2, this is to make connecting to the LiDAR easlier
+
+# LiDAR setup
+source ~/Programming/robotics-prototype/robot/rover/tx2/lidar/lidarworkspace/devel/setup.bash
+alias connectlidar='bash ~/Programming/robotics-prototype/robot/rover/tx2/lidar/lidarConnect.sh'
+alias roslidar='bash ~/Programming/robotics-prototype/robot/rover/tx2/lidar/roslidar.sh'"$1"
