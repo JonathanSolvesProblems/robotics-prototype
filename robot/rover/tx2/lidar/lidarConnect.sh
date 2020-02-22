@@ -1,3 +1,4 @@
+# /etc/init.d/dhcp stop
 sudo ip addr flush dev eth0
 sudo ip link set eth0 up
 sudo ip addr add 10.5.5.1/24 dev eth0 
