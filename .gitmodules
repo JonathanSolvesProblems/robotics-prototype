@@ -10,3 +10,6 @@
 [submodule "rover2018-elec"]
 	path = rover2018-elec
 	url = https://gitlab.com/space-concordia-robotics/rover2018-elec
+[submodule "robot/rospackages/src/gscam"]
+	path = robot/rospackages/src/gscam
+	url = https://github.com/ros-drivers/gscam.git
